@@ -1,0 +1,26 @@
+name: APP
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'packages/app/src/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'packages/app/src/**'
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: packages/app
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Dependencies
+      run: yarn install
+    - name: Execute Tests
+      run: yarn lint

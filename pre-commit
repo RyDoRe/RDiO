@@ -1,0 +1,88 @@
+#!/bin/sh
+
+STAGED_PHP_FILES=$(git diff --cached --name-only --diff-filter=ACM ./packages/api | grep ".php\{0,1\}$")
+STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM ./packages/app/src | egrep -i '\.(js|svelte)$')
+
+PHPCS_BIN=./packages/api/vendor/bin/phpcs
+PHPSTAN_BIN=./packages/api/vendor/bin/phpstan
+PHPUNIT_BIN=./packages/api/vendor/bin/phpunit
+
+if [[ ! "$STAGED_PHP_FILES" = "" ]]; then
+  PASS=true
+
+  echo "Validating PHPCS:"
+
+  (cd ./packages/api && composer run-script lint)
+
+  if [[ "$?" == 0 ]]; then
+    echo "PHPCS Passed: $FILE"
+  else
+    echo "PHPCS Failed: $FILE"
+    PASS=false
+  fi
+
+  if ! $PASS; then
+    echo "COMMIT FAILED: Your commit contains files that should pass PHPCS but do not. Please fix the PHPCS errors and try again."
+    exit 1
+  fi
+
+  echo "Validating phpstan:"
+
+  (cd ./packages/api && composer run-script phpstan)
+
+  if [[ "$?" == 0 ]]; then
+    echo "phpstan Passed: $FILE"
+  else
+    echo "phpstan Failed: $FILE"
+    PASS=false
+  fi
+
+  if ! $PASS; then
+    echo "COMMIT FAILED: Your commit contains files that should pass phpstan but do not. Please fix the phpstan errors and try again."
+    exit 1
+  fi
+
+  echo "Validating phpunit:"
+
+  (cd ./packages/api && composer run-script phpunit)
+
+  if [[ "$?" == 0 ]]; then
+    echo "phpunit Passed: $FILE"
+  else
+    echo "phpunit Failed: $FILE"
+    PASS=false
+  fi
+
+  if ! $PASS; then
+    echo "COMMIT FAILED: Your commit contains files that should pass phpunit but do not. Please fix the phpunit errors and try again."
+    exit 1
+  else
+    echo "COMMIT SUCCEEDED"
+  fi
+
+fi
+
+if [[ ! "$STAGED_JS_FILES" = "" ]]; then
+  PASS=true
+
+  echo "Validating eslint:"
+
+  (cd ./packages/app && yarn lint)
+
+  if [[ "$?" == 0 ]]; then
+    echo "eslint Passed: $FILE"
+  else
+    echo "eslint Failed: $FILE"
+    PASS=false
+  fi
+
+  if ! $PASS; then
+    echo "COMMIT FAILED: Your commit contains files that should pass eslint but do not. Please fix the eslint errors and try again."
+    exit 1
+  else
+    echo "COMMIT SUCCEEDED"
+  fi
+
+fi
+
+exit $?

@@ -1,0 +1,5 @@
+# ignore ctags
+**/tags
+
+# only use yarn.lock
+**/package-lock.json

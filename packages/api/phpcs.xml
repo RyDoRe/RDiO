@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="pcsg-generated-ruleset">
+<description>Created with the PHP Coding Standard Generator. http://edorian.github.com/php-coding-standard-generator/</description>
+  <rule ref="PSR2"/>
+  <rule ref="VariableAnalysis">
+    <properties>
+        <property name="allowUnusedFunctionParameters" value="true"/>
+    </properties>
+  </rule>
+
+  <file>app/</file>
+  <exclude-pattern>*/bootsrap/*</exclude-pattern>
+  <exclude-pattern>*/database/*</exclude-pattern>
+  <exclude-pattern>*/public/*</exclude-pattern>
+  <exclude-pattern>*/resources/*</exclude-pattern>
+  <exclude-pattern>*/routes/*</exclude-pattern>
+  <exclude-pattern>*/storage/*</exclude-pattern>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/tests/*</exclude-pattern>
+</ruleset>

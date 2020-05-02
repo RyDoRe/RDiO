@@ -1,0 +1,14 @@
+includes:
+  - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+  autoload_files:
+    - vendor/autoload.php
+  level: 7
+  checkMissingIterableValueType: false
+  paths:
+    - app
+    - tests
+  ignoreErrors:
+    - '#Method App\\Exceptions\\Handler::render()\(\).#'
+    - '#Undefined variable\: \$router#'
