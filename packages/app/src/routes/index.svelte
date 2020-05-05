@@ -1,3 +1,13 @@
+<script context="module">
+  export function preload (page, session) {
+    const { authenticated } = session
+
+    if (!authenticated) {
+      return this.redirect(302, 'login')
+    }
+  }
+</script>
+
 <style>
 	h1, figure, p {
 		text-align: center;

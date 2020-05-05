@@ -8,7 +8,6 @@ parameters:
   checkMissingIterableValueType: false
   paths:
     - app
-    - tests
   ignoreErrors:
     - '#Method App\\Exceptions\\Handler::render()\(\).#'
     - '#Undefined variable\: \$router#'
