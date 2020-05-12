@@ -60,6 +60,9 @@
 	</ul>
   {#if $session.authenticated}
     <ul>
+      {#if $session.role === 'admin'}
+        <li><a aria-current='{segment === 'users' ? "page" : undefined}' href='users'>users</a></li>
+      {/if}
       <li><a aria-current="{segment === 'profile' ? 'page' : undefined }" href="profile">{$session.username}</a></li>
       <li><a href="logout">logout</a></li>
     </ul>

@@ -28,7 +28,11 @@
     const json = await response.json()
 
     if (response.status === 200) {
-      session.set({ authenticated: true, username: json.name })
+      session.set({
+        authenticated: true,
+        username: json.name,
+        role: json.role
+      })
       goto('/')
     } else {
       if (json.error) {

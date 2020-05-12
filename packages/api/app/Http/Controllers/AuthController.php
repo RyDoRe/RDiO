@@ -44,7 +44,7 @@ class AuthController extends BaseController
             'iss' => "lumen-jwt", // Issuer of the token
             'sub' => $user->id, // Subject of the token
             'name' => $user->name, // Username
-            // TODO: add user role to jwt payload
+            'role' => $user->role, // Role
             'iat' => time(), // Time when JWT was issued.
             'exp' => time() + 60*60 // Expiration time
         ];

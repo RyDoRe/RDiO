@@ -15,7 +15,15 @@ class UsersTableSeeder extends Seeder
         App\User::create([
             'name' => 'admin',
             'email' => 'admin@mail.de',
-            'password' => app('hash')->make('Hackme!1234')
+            'password' => app('hash')->make('Hackme!1234'),
+            'role' => 'admin'
+        ]);
+
+        App\User::create([
+            'name' => 'broadcaster',
+            'email' => 'broadcaster@mail.de',
+            'password' => app('hash')->make('Hackme!1234'),
+            'role' => 'broadcaster'
         ]);
     }
 }
