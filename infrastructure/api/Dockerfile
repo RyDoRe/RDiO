@@ -23,17 +23,17 @@ RUN chmod -R 777 storage
 
 ADD infrastructure/api/wait-for-it.sh ./
 
-RUN apk add make build-base lame-dev libxml2-dev libshout-dev libvorbis-dev
+# RUN apk add make build-base lame-dev libxml2-dev libshout-dev libvorbis-dev
 
-WORKDIR /tmp
+# WORKDIR /tmp
 
-RUN wget http://downloads.us.xiph.org/releases/ices/ices-0.4.tar.gz
-RUN tar xf ices-0.4.tar.gz
+# RUN wget http://downloads.us.xiph.org/releases/ices/ices-0.4.tar.gz
+# RUN tar xf ices-0.4.tar.gz
 
-WORKDIR /tmp/ices-0.4
+# WORKDIR /tmp/ices-0.4
 
-RUN ./configure --prefix=/usr/local --with-pic --with-lame
-RUN make
-RUN make install
+# RUN ./configure --prefix=/usr/local --with-pic --with-lame
+# RUN make
+# RUN make install
 
 WORKDIR /var/www

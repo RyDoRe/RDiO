@@ -14,3 +14,16 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('login', 'AuthController@authenticate');
+    $router->post('register', 'AuthController@register');
+    $router->delete('logout', 'AuthController@logout');
+});
+
+$router->group(['middleware' => 'jwt'], function () use ($router) {
+    $router->get('users', function () {
+        $users = \App\User::all();
+        return response()->json($users);
+    });
+});

@@ -1,3 +1,5 @@
 **/node_modules
+!packages/app/src/node_modules/
+packages/app/src/node_modules/@sapper
 **/vendor
 **/.env
