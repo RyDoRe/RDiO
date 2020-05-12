@@ -10,4 +10,5 @@ parameters:
     - app
   ignoreErrors:
     - '#Method App\\Exceptions\\Handler::render()\(\).#'
+    - '#Call to an undefined method ([a-zA-Z]|\\|\||<|>)*::hasRole\(\)#'
     - '#Undefined variable\: \$router#'

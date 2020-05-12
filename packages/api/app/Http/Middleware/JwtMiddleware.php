@@ -15,11 +15,11 @@ class JwtMiddleware
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
+     * @param string $role
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role = 'user')
     {
-
         if (!isset($_COOKIE['jwt'])) {
             // Unauthorized response if token not there
             return response()->json([
@@ -42,6 +42,12 @@ class JwtMiddleware
         }
 
         $user = User::find($credentials->sub);
+
+        if (!$user->hasRole($role)) {
+            return response()->json([
+                'error' => 'User does not have the necessary access rights.'
+            ], 400);
+        }
 
         // Now let's put the user in the request class so that you can grab it from there
         $request->auth = $user;

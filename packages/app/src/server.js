@@ -21,7 +21,8 @@ polka() // You can also use Express
         session: function () {
           return {
             authenticated: !!jwtPayload,
-            username: jwtPayload.name || ''
+            username: jwtPayload.name || '',
+            role: jwtPayload.role || ''
           }
         }
       })(req, res, next)

@@ -21,7 +21,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->delete('logout', 'AuthController@logout');
 });
 
-$router->group(['middleware' => 'jwt'], function () use ($router) {
+$router->group(['middleware' => 'jwt:admin'], function () use ($router) {
     $router->get('users', function () {
         $users = \App\User::all();
         return response()->json($users);

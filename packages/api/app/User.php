@@ -29,4 +29,32 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * Check if user has the role.
+     *
+     * @param string $role
+     * @return boolean
+     */
+    public function hasRole($role)
+    {
+        // TODO: use a user roles table
+        // User roles descending more rights
+        // example: admin has the same rights as user and broadcaster,
+        // but user does not have the same rights as admin an broadcaster
+        $roles = [
+            'user',
+            'broadcaster',
+            'admin'
+        ];
+
+        $indexOfRole = array_search($role, $roles);
+        $indexOfUserRole = array_search($this->role, $roles);
+
+        if ($indexOfRole <= $indexOfUserRole) {
+            return true;
+        }
+
+        return false;
+    }
 }
