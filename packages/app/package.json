@@ -19,7 +19,8 @@
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.0",
     "polka": "next",
-    "sirv": "^0.4.0"
+    "sirv": "^0.4.0",
+    "svelte-awesome": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

@@ -57,4 +57,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
         return false;
     }
+
+    /**
+     * Get the playlists of the users.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Playlist>
+     */
+    public function playlists()
+    {
+        return $this->hasMany('App\Playlist');
+    }
 }
