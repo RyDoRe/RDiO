@@ -23,4 +23,14 @@ class Playlist extends Model
     protected $hidden = [
         'user_id',
     ];
+
+    /**
+     * The songs that belong to the playlist.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Song>
+     */
+    public function songs()
+    {
+        return $this->belongsToMany('App\Song')->withPivot('song_order')->orderBy('song_order');
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlaylistSongsTable extends Migration
+class CreatePlaylistSongTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePlaylistSongsTable extends Migration
      */
     public function up()
     {
-        Schema::create('playlist_songs', function (Blueprint $table) {
+        Schema::create('playlist_song', function (Blueprint $table) {
             $table->unsignedBigInteger('playlist_id');
             $table->unsignedBigInteger('song_id');
             $table->unsignedBigInteger('song_order');

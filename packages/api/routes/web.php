@@ -27,3 +27,13 @@ $router->group(['middleware' => 'jwt:admin'], function () use ($router) {
         return response()->json($users);
     });
 });
+
+$router->group(['middleware' => 'jwt'], function () use ($router) {
+    $router->get('playlists', 'PlaylistController@index');
+    $router->post('playlists', 'PlaylistController@store');
+    $router->get('playlists/{id}', 'PlaylistController@show');
+    $router->put('playlists/{id}', 'PlaylistController@update');
+    $router->delete('playlists/{id}', 'PlaylistController@destroy');
+    $router->put('playlists/{id}/songs', 'PlaylistController@updateSong');
+    $router->delete('playlists/{playlistId}/songs/{songId}', 'PlaylistController@removeSong');
+});
