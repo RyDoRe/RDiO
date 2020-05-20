@@ -60,7 +60,7 @@
 	</ul>
   {#if $session.authenticated}
     <ul>
-      <li><a aria-current="{segment === 'playlists' ? 'page' : undefined }" href="playlists">playlists</a></li>
+      <li><a aria-current='{segment === 'playlists' ? 'page' : undefined }' href="playlists">playlists</a></li>
       {#if $session.role === 'admin'}
         <li><a aria-current='{segment === 'users' ? "page" : undefined}' href='users'>users</a></li>
       {/if}

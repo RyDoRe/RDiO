@@ -6,6 +6,7 @@
   export let name = null
   export let placeholder = null
   export let value = ''
+  export let id = null
 
   const dispatch = createEventDispatcher()
 
@@ -22,6 +23,7 @@
 
 <input
   bind:this={ref}
+  {id}
   {type}
   {name}
   {placeholder}

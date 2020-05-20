@@ -21,14 +21,10 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->delete('logout', 'AuthController@logout');
 });
 
-$router->group(['middleware' => 'jwt:admin'], function () use ($router) {
-    $router->get('users', function () {
-        $users = \App\User::all();
-        return response()->json($users);
-    });
-});
-
 $router->group(['middleware' => 'jwt'], function () use ($router) {
+    $router->get('users/me', 'UserController@showSelf');
+    $router->put('users/me', 'UserController@updateSelf');
+    $router->put('users/me', 'UserController@updateSelf');
     $router->get('playlists', 'PlaylistController@index');
     $router->post('playlists', 'PlaylistController@store');
     $router->get('playlists/{id}', 'PlaylistController@show');
@@ -36,4 +32,11 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
     $router->delete('playlists/{id}', 'PlaylistController@destroy');
     $router->put('playlists/{id}/songs', 'PlaylistController@updateSong');
     $router->delete('playlists/{playlistId}/songs/{songId}', 'PlaylistController@removeSong');
+});
+
+$router->group(['middleware' => 'jwt:admin'], function () use ($router) {
+    $router->get('users', 'UserController@index');
+    $router->get('users/{id}', 'UserController@show');
+    $router->put('users/{id}', 'UserController@update');
+    $router->delete('users/{id}', 'UserController@destroy');
 });
