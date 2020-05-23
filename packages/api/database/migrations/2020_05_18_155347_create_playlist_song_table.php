@@ -31,6 +31,6 @@ class CreatePlaylistSongTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('playlist_songs');
+        Schema::dropIfExists('playlist_song');
     }
 }
