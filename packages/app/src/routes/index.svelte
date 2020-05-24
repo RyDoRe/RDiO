@@ -12,6 +12,7 @@
 	h1, figure, p {
 		text-align: center;
 		margin: 0 auto;
+		color: rgb(249, 249, 249);
 	}
 
 	h1 {
