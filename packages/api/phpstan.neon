@@ -12,3 +12,5 @@ parameters:
     - '#Method App\\Exceptions\\Handler::render()\(\).#'
     - '#Call to an undefined method ([a-zA-Z]|\\|\||<|>)*::hasRole\(\)#'
     - '#Undefined variable\: \$router#'
+    - '#Cannot call method move\(\) on array<(.*)>#'
+    - '#Cannot call method extension\(\) on array<(.*)>#'

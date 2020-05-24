@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\File;
 
 class SongController extends Controller
 {
+        
+    /**
+     * upload
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function upload(Request $request)
     {
 
@@ -37,7 +44,8 @@ class SongController extends Controller
         }
 
         $title = strtolower($request->input('title'));
-        $songQuery = Song::where('title', $title)->where('user_id', $request->auth->id)->where('artist_id', $artistId)->first();
+        $songQuery = Song::where('title', $title)->where('user_id', $request->auth->id)
+        ->where('artist_id', $artistId)->first();
 
         if (!empty($songQuery)) {
             return response()->json(['Song' => ['Song already exists!']], 418);
@@ -49,7 +57,8 @@ class SongController extends Controller
 
         if (!empty($request->file('thumbnail'))) {
             $upload_dir_thumbnails = storage_path() . '/app/' . $request->auth->id . '/thumbnails/';
-            $songs_thumbnail_name = $request->input('title') . '_thumbnail_' . time() . '.' . $request->file('thumbnail')->extension();
+            $songs_thumbnail_name = $request->input('title') . '_thumbnail_' . time() . '.' .
+            $request->file('thumbnail')->extension();
 
             if (!is_dir($upload_dir_thumbnails)) {
                 File::makeDirectory($upload_dir_thumbnails, 0751, true);

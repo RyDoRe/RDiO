@@ -1,6 +1,5 @@
 <script>
     import IconButton from './IconButton.svelte'
-    import { onMount } from 'svelte'
     import { stores } from '@sapper/app'
 
     import { play as playIcon, pause as pauseIcon } from 'svelte-awesome/icons'
@@ -13,38 +12,38 @@
     let togglePlay = 0
 
     $: {
-        if (audio) {
-            audio.volume = volume / 100
-        }
+      if (audio) {
+        audio.volume = volume / 100
+      }
     }
 
     function play () {
-        audio.play()
-        setInterval(() => {
-            currentTime = audio.currentTime
-        }, 1000)
-        togglePlay = 1
+      audio.play()
+      setInterval(() => {
+        currentTime = audio.currentTime
+      }, 1000)
+      togglePlay = 1
     }
 
     function stop () {
-        audio.pause()
-        togglePlay = 0
+      audio.pause()
+      togglePlay = 0
     }
 
     function formatTime (_seconds = 0) {
-        const time = Math.round(_seconds)
-        const minutes = Math.floor(time / 60)
-        const seconds = time - (minutes * 60)
+      const time = Math.round(_seconds)
+      const minutes = Math.floor(time / 60)
+      const seconds = time - (minutes * 60)
 
-        let extraZero
+      let extraZero
 
-        if (seconds < 10) {
-            extraZero = '0'
-        } else {
-            extraZero = ''
-        }
+      if (seconds < 10) {
+        extraZero = '0'
+      } else {
+        extraZero = ''
+      }
 
-        return minutes + ':' + extraZero + seconds
+      return minutes + ':' + extraZero + seconds
     }
 </script>
 
