@@ -1,0 +1,89 @@
+<script>
+    import IconButton from './IconButton.svelte'
+    import { stores } from '@sapper/app'
+
+    import { play as playIcon, pause as pauseIcon } from 'svelte-awesome/icons'
+
+    const { session } = stores()
+
+    let audio
+    let currentTime
+    let volume = 20
+    let togglePlay = 0
+
+    $: {
+      if (audio) {
+        audio.volume = volume / 100
+      }
+    }
+
+    function play () {
+      audio.play()
+      setInterval(() => {
+        currentTime = audio.currentTime
+      }, 1000)
+      togglePlay = 1
+    }
+
+    function stop () {
+      audio.pause()
+      togglePlay = 0
+    }
+
+    function formatTime (_seconds = 0) {
+      const time = Math.round(_seconds)
+      const minutes = Math.floor(time / 60)
+      const seconds = time - (minutes * 60)
+
+      let extraZero
+
+      if (seconds < 10) {
+        extraZero = '0'
+      } else {
+        extraZero = ''
+      }
+
+      return minutes + ':' + extraZero + seconds
+    }
+</script>
+
+<style>
+ .playingBar {
+     width: 100%;
+     position: fixed;
+     bottom: 0;
+     left: 0;
+     border-top: 1px solid black;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+ }
+</style>
+
+{#if $session.authenticated}
+<div class="playingBar"> 
+    <div class="playingBarMetaData">
+        <!--
+
+        -->
+    </div>
+
+    <div class="playingBarControl">
+        {#if togglePlay}
+            <IconButton icon={pauseIcon} on:click={stop}></IconButton>
+        {:else}
+            <IconButton icon={playIcon} on:click={play}></IconButton>
+        {/if}
+    </div>
+
+    <div class="playingBarVolume">
+        <input type="range" min="0" max="100" bind:value={volume}>
+        <audio bind:this={audio}>
+            <source src="http://rdio.ddnss.de/rock1" />
+        </audio>
+        {formatTime(currentTime)}
+    </div>
+
+    
+</div>
+{/if}
