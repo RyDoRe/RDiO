@@ -63,6 +63,7 @@
       <li><a aria-current='{segment === 'playlists' ? 'page' : undefined }' href="playlists">playlists</a></li>
       {#if $session.role === 'admin'}
         <li><a aria-current='{segment === 'users' ? "page" : undefined}' href='users'>users</a></li>
+		<li><a aria-current='{segment === 'songUpload' ? "page" : undefined}' href='songUpload'>songUpload</a></li>
       {/if}
       <li><a aria-current="{segment === 'profile' ? 'page' : undefined }" href="profile">{$session.username}</a></li>
       <li><a href="logout">logout</a></li>
