@@ -32,7 +32,10 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
     $router->delete('playlists/{id}', 'PlaylistController@destroy');
     $router->put('playlists/{id}/songs', 'PlaylistController@updateSong');
     $router->delete('playlists/{playlistId}/songs/{songId}', 'PlaylistController@removeSong');
+    $router->post('playlists/{playlistId}/songs/{songId}', 'PlaylistController@addSongToPlaylist');
     $router->post('songUpload', 'SongController@upload');
+    $router->get('songs', 'SongController@showAllUserSongs');
+    $router->delete('songs/{id}', 'SongController@deleteSong');
 });
 
 $router->group(['middleware' => 'jwt:admin'], function () use ($router) {

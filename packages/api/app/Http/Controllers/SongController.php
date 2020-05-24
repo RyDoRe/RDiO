@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Song;
 use App\Artist;
+use App\Playlist;
 use Validator;
 use Illuminate\Http\Request;
 use App\Exceptions\Handler;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use App\Traits\PlaylistSongTrait;
 
 class SongController extends Controller
 {
-        
+    use PlaylistSongTrait;
     /**
      * upload
      *
@@ -94,5 +97,70 @@ class SongController extends Controller
 
         $song->save();
         return response()->json(['message' => 'Uploaded song.']);
+    }
+    
+    /**
+     * showAllUserSongs
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showAllUserSongs(Request $request)
+    {
+        // Search in the playlist of the authenticated user
+        $songs = $request->auth->songs()->with('artist')->get();
+
+        // No playlist found
+        if (empty($songs)) {
+            return response()->json(['message' => 'Could not find songs.'], 404);
+        }
+
+        return response()->json($songs);
+    }
+    
+    /**
+     * deleteSong
+     *
+     * @param  Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteSong(Request $request, $id)
+    {
+
+        //Remove The database entry
+        //remove the songfile
+        //remove the thumbnail if it exists
+        
+
+        try {
+            // Search in the playlist of the authenticated user
+            $songs = $request->auth->songs->find($id);
+
+            // No playlist found
+            if (empty($songs)) {
+                return response()->json(['message' => 'Could not find song.'], 404);
+            }
+
+            File::delete($songs->path);
+            File::delete($songs->thumbnail);
+
+            
+            $playlistSongRelations = DB::table('playlist_song')->where('song_id', $id)->get();
+
+            foreach ($playlistSongRelations as $playlistSongrelation) {
+                try {
+                    $this->unbindPlaylistSong($request, $playlistSongrelation->playlist_id, $id);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Could not remove song from playlist.'], 400);
+                }
+            }
+
+            $songs->delete();
+
+            return response()->json(['message' => 'Deleted Song'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Could not delete song'], 400);
+        }
     }
 }

@@ -7,9 +7,11 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Exceptions\Handler;
 use Illuminate\Database\Eloquent\Builder;
+use App\Traits\PlaylistSongTrait;
 
 class PlaylistController extends Controller
 {
+    use PlaylistSongTrait;
     /**
      * Display a listing of playlists.
      *
@@ -173,31 +175,33 @@ class PlaylistController extends Controller
     public function removeSong(Request $request, $playlistId, $songId)
     {
         try {
-            // Search in the playlist of the authenticated user
-            $playlist = $request->auth->playlists->find($playlistId);
-
-            // No playlist found
-            if (empty($playlist)) {
-                return response()->json(['message' => 'Could not find playlist.'], 404);
-            }
-
-            $song = $playlist->songs->find($songId);
-
-            // No song found
-            if (empty($song)) {
-                return response()->json(['message' => 'Could not find song.'], 404);
-            }
-
-            $playlist->songs()->detach($songId);
-
-            $songs = $playlist->songs()->wherePivot('song_order', '>', $song->pivot->song_order)->get();
-            foreach ($songs as $_song) {
-                $playlist->songs()->updateExistingPivot($_song->id, ['song_order' => $_song->pivot->song_order - 1]);
-            }
-
+            $this->unbindPlaylistSong($request, $playlistId, $songId);
             return response()->json(['message' => 'Removed song from playlist.'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Could not remove song from playlist.'], 400);
         }
+    }
+    
+    /**
+     * addSongToPlaylist
+     *
+     * @param  Request $request
+     * @param  int $playlistId
+     * @param  int $songId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addSongToPlaylist(Request $request, $playlistId, $songId)
+    {
+        // Search in the playlist of the authenticated user
+        $playlist = $request->auth->playlists()->withCount('songs')->find($playlistId);
+
+        // No playlist found
+        if (empty($playlist)) {
+            return response()->json(['message' => 'Could not find playlist.'], 404);
+        }
+
+        $playlist->songs()->attach($songId, ['song_order' => $playlist->songs_count + 1]);
+
+        return response()->json('Song was successfully added to playlist.');
     }
 }

@@ -13,9 +13,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call('UsersTableSeeder');
         // Dev Seeder
-        /* $this->call('ArtistSeeder'); */
-        /* $this->call('SongSeeder'); */
-        /* $this->call('PlaylistSeeder'); */
-        /* $this->call('PlaylistSongSeeder'); */
+        $this->call('ArtistSeeder');
+        $this->call('SongSeeder');
+        $this->call('PlaylistSeeder');
+        $this->call('PlaylistSongSeeder');
     }
 }
