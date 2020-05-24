@@ -67,4 +67,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany('App\Playlist');
     }
+    
+    /**
+     * songs
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Song>
+     */
+    public function songs()
+    {
+        return $this->hasMany('App\Song');
+    }
 }
