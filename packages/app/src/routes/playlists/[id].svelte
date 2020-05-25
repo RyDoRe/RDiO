@@ -112,6 +112,10 @@
     const start = i
     event.dataTransfer.setData('text/plain', start)
   }
+
+  function createRadio() {
+
+  }
 </script>
 
 <style>
@@ -122,7 +126,9 @@
 </style>
 
 {#if playlist}
-  <h1>{playlist.name}</h1>
+  <h1>{playlist.name}</h1> 
+
+  <button on:click={createRadio}>Radio erstellen</button>
 
   {#if playlist.songs}
     {#each playlist.songs as song, songIndex (song.id)}

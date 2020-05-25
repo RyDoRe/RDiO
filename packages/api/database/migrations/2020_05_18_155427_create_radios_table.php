@@ -18,10 +18,13 @@ class CreateRadiosTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('icon');
+            $table->string('path');
             $table->unsignedBigInteger('playlist_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
             $table->foreign('playlist_id')->references('id')->on('playlists')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

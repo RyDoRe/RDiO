@@ -67,7 +67,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany('App\Playlist');
     }
-    
+
     /**
      * songs
      *
@@ -76,5 +76,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function songs()
     {
         return $this->hasMany('App\Song');
+    }
+
+    public function radios()
+    {
+        return $this->hasMany('App\Radio');
     }
 }

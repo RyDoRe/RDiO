@@ -36,6 +36,10 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
     $router->post('songUpload', 'SongController@upload');
     $router->get('songs', 'SongController@showAllUserSongs');
     $router->delete('songs/{id}', 'SongController@deleteSong');
+
+    // radio
+    $router->post('radios', 'RadioController@store');
+    $router->get('radios/{id}', 'RadioController@start');
 });
 
 $router->group(['middleware' => 'jwt:admin'], function () use ($router) {
