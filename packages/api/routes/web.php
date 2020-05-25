@@ -32,6 +32,10 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
     $router->delete('playlists/{id}', 'PlaylistController@destroy');
     $router->put('playlists/{id}/songs', 'PlaylistController@updateSong');
     $router->delete('playlists/{playlistId}/songs/{songId}', 'PlaylistController@removeSong');
+
+    // radio
+    $router->post('radios', 'RadioController@store');
+    $router->get('radios/{id}', 'RadioController@start');
 });
 
 $router->group(['middleware' => 'jwt:admin'], function () use ($router) {

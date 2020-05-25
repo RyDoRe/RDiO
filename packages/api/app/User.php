@@ -67,4 +67,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany('App\Playlist');
     }
+
+    public function radios()
+    {
+        return $this->hasMany('App\Radio');
+    }
 }
