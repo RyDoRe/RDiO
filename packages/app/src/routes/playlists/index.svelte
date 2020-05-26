@@ -149,7 +149,7 @@
   :global(.addbutton) {
     position: fixed;
     right: 2rem;
-    bottom: 2rem;
+    bottom: 4rem;
   }
 
   .error {

@@ -67,7 +67,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany('App\Playlist');
     }
-    
+
     /**
      * songs
      *
@@ -76,5 +76,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function songs()
     {
         return $this->hasMany('App\Song');
+    }
+
+    /**
+     * The radios of the users.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Radio>
+     */
+    public function radios()
+    {
+        return $this->hasMany('App\Radio');
     }
 }

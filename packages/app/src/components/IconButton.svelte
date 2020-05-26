@@ -1,7 +1,12 @@
 <script>
   import Icon from 'svelte-awesome/components/Icon.svelte'
 
+  import { createEventDispatcher } from 'svelte'
+
+  const dispatch = createEventDispatcher()
+
   export let icon = null
+  export let disabled = false
 </script>
 
 <style>
@@ -19,8 +24,19 @@
   .iconbutton:hover {
     background-color: rgba(0, 0, 0, 0.04);
   }
+
+  .iconbuttondisabled {
+    cursor: default;
+    color: rgb(197, 197, 197);
+  }
+
+  .iconbuttondisabled:hover {
+    cursor: default;
+    color: rgb(197, 197, 197);
+    background-color: transparent;
+  }
 </style>
 
-<div class="iconbutton" on:click>
+<div class="iconbutton" class:iconbuttondisabled={disabled} on:click={() => !disabled && dispatch('click')}>
   <Icon data={icon} />
 </div>
