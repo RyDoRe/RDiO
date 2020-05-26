@@ -61,6 +61,16 @@
 </script>
 
 <style>
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 350px;
+  }
+
+  label {
+    color: #fff;
+  }
+
   .error {
     color: red;
   }

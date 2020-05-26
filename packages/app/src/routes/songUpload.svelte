@@ -63,6 +63,14 @@
   }
 </script>
 
+<style>
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 350px;
+  }
+</style>
+
 <h1>Song Upload!</h1>
 
 <form on:submit|preventDefault={uploadSong}>

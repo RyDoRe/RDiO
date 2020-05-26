@@ -4,6 +4,8 @@
 
     if (!authenticated) {
       return this.redirect(302, 'login')
+    } else {
+      return this.redirect(302, 'radios')
     }
   }
 </script>

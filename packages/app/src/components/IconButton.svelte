@@ -7,36 +7,44 @@
 
   export let icon = null
   export let disabled = false
+
+  function handleClick (event) {
+    event.stopPropagation()
+    if (!disabled) dispatch('click', event)
+  }
 </script>
 
 <style>
   .iconbutton {
-    color: rgba(0, 0, 0, 0.54);
     padding: 12px;
+    color: rgb(197, 197, 197);
     font-size: 1.5rem;
     text-align: center;
     transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     border-radius: 50%;
     box-sizing: border-box;
     display: inline-flex;
+    min-width: 40px;
+    min-height: 40px;
+    justify-content: center;
   }
 
   .iconbutton:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgb(197, 197, 197);
+    color: rgba(0, 0, 0, 0.54);
   }
 
   .iconbuttondisabled {
     cursor: default;
-    color: rgb(197, 197, 197);
+    color: rgba(0, 0, 0, 0.54);
   }
 
   .iconbuttondisabled:hover {
     cursor: default;
-    color: rgb(197, 197, 197);
     background-color: transparent;
   }
 </style>
 
-<div class="iconbutton" class:iconbuttondisabled={disabled} on:click={() => !disabled && dispatch('click')}>
+<div class="iconbutton" class:iconbuttondisabled={disabled} on:click={handleClick}>
   <Icon data={icon} />
 </div>

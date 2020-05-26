@@ -47,6 +47,12 @@
 </script>
 
 <style>
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 350px;
+  }
+
   .error {
     color: red;
   }
