@@ -153,6 +153,8 @@
 {#if playlist}
   <h1>{playlist.name}</h1>
 
+  <button on:click={createRadio}>Radio erstellen</button>
+
   <button on:click={() => { showCreateRadioDialog = true }}>Create Radio</button>
 
   {#if playlist.songs}
