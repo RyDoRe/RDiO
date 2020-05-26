@@ -19,7 +19,7 @@
 
   import { play, powerOff, times } from 'svelte-awesome/icons'
 
-  import { get, put, del } from 'api'
+  import { get, put, del, baseURL } from 'api'
   import { onMount } from 'svelte'
 
   let myRadios
@@ -49,7 +49,7 @@
 
   function playRadio (event, radioId) {
     event.stopPropagation()
-    src.update(s => `http://localhost:8080/radios/${radioId}/stream`)
+    src.update(s => `${baseURL}/radios/${radioId}/stream`)
   }
 
   async function activateRadio (event, radioId, radioIndex) {

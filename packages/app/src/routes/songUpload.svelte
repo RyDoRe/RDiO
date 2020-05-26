@@ -12,6 +12,8 @@
   import Input from '../components/Input.svelte'
   import Button from '../components/Button.svelte'
 
+  import { baseURL } from 'api'
+
   let error
   let message = ''
 
@@ -35,13 +37,10 @@
     data.append('rating', rating.value)
     data.append('artist', artist.value)
 
-    const response = await fetch('http://localhost:8080/songUpload', {
+    const response = await fetch(`${baseURL}/songUpload`, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
-      headers: {
-        Accept: 'application/json'
-      },
       body: data
     })
 
@@ -69,6 +68,10 @@
     flex-direction: column;
     max-width: 350px;
   }
+
+  .message {
+    color: white;
+  }
 </style>
 
 <h1>Song Upload!</h1>
@@ -81,7 +84,7 @@
   <Input type="file" name="path" placeholder="songPath" />
   <Input type="text" name="artist" placeholder="artist" />
   <Button type="submit">Upload</Button>
-  <p>{message}</p>
+  <p class="message">{message}</p>
   {#if error}
     <p class="error">Error: {error}</p>
   {/if}

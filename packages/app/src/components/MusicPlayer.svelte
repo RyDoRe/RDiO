@@ -72,6 +72,10 @@
  input[type="range"]:disabled {
    color: rgba(0, 0, 0, 0.54);
  }
+
+ .time {
+   color: white;
+ }
 </style>
 
 {#if $session.authenticated}
@@ -95,7 +99,7 @@
       <audio preload="none" bind:this={audio}>
         <source src={$src} />
       </audio>
-      {formatTime(currentTime)}
+      <span class="time">{formatTime(currentTime)}</span>
     </div>
 
 
