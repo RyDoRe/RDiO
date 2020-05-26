@@ -78,6 +78,7 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase())))
     const response = await get('playlists')
     const json = await response.json()
     playlists = json
+    playlistId = json[0].id
   }
 
   // Remove a song

@@ -15,6 +15,8 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->get('radios/{id}/stream', 'RadioController@stream');
+
 $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('login', 'AuthController@authenticate');
     $router->post('register', 'AuthController@register');
@@ -38,8 +40,12 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
     $router->delete('songs/{id}', 'SongController@deleteSong');
 
     // radio
+    $router->get('radios', 'RadioController@index');
+    $router->get('radios/my', 'RadioController@indexUserRadios');
     $router->post('radios', 'RadioController@store');
+    $router->put('radios/{id}/activate', 'RadioController@activate');
     $router->get('radios/{id}', 'RadioController@start');
+    $router->delete('radios/{id}', 'RadioController@destroy');
 });
 
 $router->group(['middleware' => 'jwt:admin'], function () use ($router) {

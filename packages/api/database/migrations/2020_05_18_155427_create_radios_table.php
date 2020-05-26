@@ -17,8 +17,8 @@ class CreateRadiosTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('icon');
-            $table->string('path');
+            $table->string('icon')->nullable();
+            $table->tinyInteger('active')->default(0);
             $table->unsignedBigInteger('playlist_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

@@ -9,6 +9,7 @@
 </script>
 
 <script>
+  import Input from '../../components/Input.svelte'
   import ListItem from '../../components/ListItem.svelte'
   import ListItemText from '../../components/ListItemText.svelte'
   import Dialog from '../../components/Dialog.svelte'
@@ -16,7 +17,7 @@
 
   import { times } from 'svelte-awesome/icons'
 
-  import { get, put, del } from 'api'
+  import { get, post, put, del } from 'api'
   import { stores, goto } from '@sapper/app'
   import { onMount } from 'svelte'
   import { flip } from 'svelte/animate'
@@ -27,6 +28,11 @@
   let playlist
   // Visibilty of dialogs
   let showRemoveDialog = false
+  let showCreateRadioDialog = false
+
+  let name
+  let description
+  let genre
 
   let _id
   let index
@@ -49,6 +55,7 @@
   // Close the dialog and reset input values
   function handleClose () {
     showRemoveDialog = false
+    showCreateRadioDialog = false
     error = null
   }
 
@@ -113,8 +120,26 @@
     event.dataTransfer.setData('text/plain', start)
   }
 
-  function createRadio() {
+  async function createRadio () {
+    const response = await post('radios', {
+      name,
+      description,
+      genre,
+      playlist_id: id
+    })
 
+    const json = await response.json()
+    if (response.status === 200) {
+      handleClose()
+    } else {
+      if (json.error) {
+        error = json.error
+      } else {
+        error = Object.keys(json).map(key => {
+          return json[key].join('')
+        }).join(' ')
+      }
+    }
   }
 </script>
 
@@ -126,9 +151,9 @@
 </style>
 
 {#if playlist}
-  <h1>{playlist.name}</h1> 
+  <h1>{playlist.name}</h1>
 
-  <button on:click={createRadio}>Radio erstellen</button>
+  <button on:click={() => { showCreateRadioDialog = true }}>Create Radio</button>
 
   {#if playlist.songs}
     {#each playlist.songs as song, songIndex (song.id)}
@@ -154,6 +179,17 @@
 {#if showRemoveDialog}
   <Dialog onClose={handleClose} onConfirm={removeSong} title="Remove song from playlist">
     <p>Are you sure you want to remove this song?</p>
+    {#if error}
+      <p class="error">Error: {error}</p>
+    {/if}
+  </Dialog>
+{/if}
+
+{#if showCreateRadioDialog}
+  <Dialog onClose={handleClose} onConfirm={createRadio} title="Create a radio">
+    <Input placeholder="Name" bind:value={name} />
+    <textarea placeholder="Description" bind:value={description}></textarea>
+    <Input placeholder="Genre" bind:value={genre} />
     {#if error}
       <p class="error">Error: {error}</p>
     {/if}

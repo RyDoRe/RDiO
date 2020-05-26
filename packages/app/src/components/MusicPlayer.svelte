@@ -1,8 +1,10 @@
 <script>
     import IconButton from './IconButton.svelte'
-    import { stores } from '@sapper/app'
 
     import { play as playIcon, pause as pauseIcon } from 'svelte-awesome/icons'
+
+    import { stores } from '@sapper/app'
+    import { src } from '../store'
 
     const { session } = stores()
 
@@ -16,6 +18,14 @@
         audio.volume = volume / 100
       }
     }
+
+    src.subscribe(value => {
+      if (audio) {
+        audio.pause()
+        audio.load()
+        play()
+      }
+    })
 
     function play () {
       audio.play()
@@ -61,7 +71,7 @@
 </style>
 
 {#if $session.authenticated}
-<div class="playingBar"> 
+<div class="playingBar">
     <div class="playingBarMetaData">
         <!--
 
@@ -69,21 +79,21 @@
     </div>
 
     <div class="playingBarControl">
-        {#if togglePlay}
-            <IconButton icon={pauseIcon} on:click={stop}></IconButton>
-        {:else}
-            <IconButton icon={playIcon} on:click={play}></IconButton>
-        {/if}
+      {#if togglePlay}
+        <IconButton icon={pauseIcon} on:click={stop}></IconButton>
+      {:else}
+        <IconButton disabled={!$src} icon={playIcon} on:click={play}></IconButton>
+      {/if}
     </div>
 
     <div class="playingBarVolume">
-        <input type="range" min="0" max="100" bind:value={volume}>
-        <audio bind:this={audio}>
-            <source src="http://rdio.ddnss.de/rock1" />
-        </audio>
-        {formatTime(currentTime)}
+      <input disabled={!$src} type="range" min="0" max="100" bind:value={volume}>
+      <audio preload="none" bind:this={audio}>
+        <source src={$src} />
+      </audio>
+      {formatTime(currentTime)}
     </div>
 
-    
+
 </div>
 {/if}
