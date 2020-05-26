@@ -68,6 +68,10 @@
      justify-content: center;
      align-items: center;
  }
+
+ input[type="range"]:disabled {
+   color: rgba(0, 0, 0, 0.54);
+ }
 </style>
 
 {#if $session.authenticated}
@@ -87,7 +91,7 @@
     </div>
 
     <div class="playingBarVolume">
-      <input disabled={!$src} type="range" min="0" max="100" bind:value={volume}>
+      <input type="range" min="0" max="100" bind:value={volume}>
       <audio preload="none" bind:this={audio}>
         <source src={$src} />
       </audio>

@@ -107,7 +107,7 @@
   }
 
   .iconbutton:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: rgb(197, 197, 197);
   }
   .radio-on {
     color: green;

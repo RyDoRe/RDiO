@@ -13,6 +13,7 @@
 		padding: 0 1em;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 	}
 
 	ul {
@@ -30,6 +31,7 @@
 	li {
 		display: block;
 		float: left;
+    color: rgb(255, 255, 255);
 	}
 
 	[aria-current] {
@@ -52,11 +54,16 @@
 		padding: 1em 0.5em;
 		display: block;
 	}
+
+  .logo {
+    height: 80px;
+  }
+
 </style>
 
 <nav>
 	<ul>
-		<li><a aria-current='{segment === undefined ? "page" : undefined}' href='.'>home</a></li>
+		<li><a class="logolink" ria-current='{segment === undefined ? "page" : undefined}' href='.'><img class="logo" src="logo.png" alt="Logo"></a></li>
 	</ul>
   {#if $session.authenticated}
     <ul>

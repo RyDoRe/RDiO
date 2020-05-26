@@ -165,7 +165,7 @@
     <div animate:flip>
       <ListItem on:click={() => goto(`playlists/${playlist.id}`)}>
         <ListItemText>{playlist.name}</ListItemText>
-        <span>{playlist.songs_count} Song(s)</span>
+        <span style="color: white;">{playlist.songs_count} Song(s)</span>
         <IconButton icon={edit} on:click={e => openEditDialog(e, playlist.id, playlist.name, playlistIndex) }/>
         <IconButton icon={trash} on:click={e => openDeleteDialog(e, playlist.id, playlistIndex)} />
       </ListItem>
@@ -183,8 +183,7 @@
 {/if}
 
 {#if showEditDialog}
-  <Dialog onClose={handleClose} onConfirm={editPlaylist}>
-    <p>Edit Playlist</p>
+  <Dialog onClose={handleClose} onConfirm={editPlaylist} title="Edit Playlist">
     <Input placeholder="Name" bind:value={name} bind:ref={inputRef} on:enter={editPlaylist} />
     {#if error}
       <p class="error">Error: {error}</p>
