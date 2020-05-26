@@ -12,6 +12,8 @@
   import Input from '../components/Input.svelte'
   import Button from '../components/Button.svelte'
 
+  import { baseURL } from 'api'
+
   let error
   let message = ''
 
@@ -35,7 +37,7 @@
     data.append('rating', rating.value)
     data.append('artist', artist.value)
 
-    const response = await fetch('http://localhost:8080/songUpload', {
+    const response = await fetch(`${baseURL}/songUpload`, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',

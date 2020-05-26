@@ -3,25 +3,29 @@ version: '3'
 services:
   app:
     build:
-      context: .
-      dockerfile: infrastructure/app/Dockerfile
+      context: packages/app
+      dockerfile: ../../infrastructure/app/Dockerfile
     ports:
-      - '3000:3000'
+      - '5000:3000'
+    environment:
+      - API_BASE_URL=http://localhost:4000
   api_nginx:
     build: infrastructure/api_nginx
     links:
       - api:php
+    depends_on:
+      - api
     ports:
-      - '8080:80'
+      - '4000:80'
   api:
     build:
-      context: .
-      dockerfile: infrastructure/api/Dockerfile
+      context: packages/api
+      dockerfile: ../../infrastructure/api/Dockerfile
     command: './wait-for-it.sh db:3306 -- ash -c "php artisan migrate:fresh --seed && php-fpm"'
     depends_on:
       - db
-    links:
-      - icecast
+    volumes:
+      - ".env:/var/www/.env"
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -32,12 +36,3 @@ services:
       MYSQL_DATABASE: rdio
       MYSQL_USER: rdio
       MYSQL_PASSWORD: secret
-  icecast:
-    image: moul/icecast
-    environment:
-      ICECAST_SOURCE_PASSWORD: hackme
-      ICECAST_ADMIN_PASSWORD: hackme
-      ICECAST_PASSWORD: hackme
-      ICECAST_RELAY_PASSWORD: hackme
-    ports:
-      - '8000:8000'
