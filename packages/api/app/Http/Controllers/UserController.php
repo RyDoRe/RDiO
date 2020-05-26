@@ -190,7 +190,15 @@ class UserController extends Controller
 
                 return response()
                     ->json($user)
-                    ->withCookie(new Cookie('jwt', $token, (time() + 60 * 60), '/', 'localhost', false, true));
+                    ->withCookie(new Cookie(
+                        'jwt',
+                        $token,
+                        (time() + 60 * 60),
+                        '/',
+                        env('COOKIE_DOMAIN', 'localhost'),
+                        false,
+                        true
+                    ));
             }
 
             return response()->json($user);

@@ -68,7 +68,15 @@ class AuthController extends BaseController
             return response()
                 ->json($user, 200)
                 // Set a http cookie with the token as value
-                ->withCookie(new Cookie('jwt', $token, (time() + 60 * 60), '/', 'localhost', false, true));
+                ->withCookie(new Cookie(
+                    'jwt',
+                    $token,
+                    (time() + 60 * 60),
+                    '/',
+                    env('COOKIE_DOMAIN', 'localhost'),
+                    false,
+                    true
+                ));
         }
 
         // Bad Request response
@@ -128,6 +136,6 @@ class AuthController extends BaseController
         setcookie('jwt', '', -1, '/', 'localhost', false, true);
         return response()
             ->json(['message' => 'User has logged out.'])
-            ->withCookie(new Cookie('jwt', '', -1, '/', 'localhost', false, true));
+            ->withCookie(new Cookie('jwt', '', -1, '/', env('COOKIE_DOMAIN', 'localhost'), false, true));
     }
 }

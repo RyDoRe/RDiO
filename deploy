@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# build api
+docker build -f infrastructure/api/Dockerfile -t registry.gitlab.com/chromion/rdio/api packages/api
+docker push registry.gitlab.com/chromion/rdio/api
+
+# build app
+docker build -f infrastructure/app/Dockerfile -t registry.gitlab.com/chromion/rdio/app packages/app
+docker push registry.gitlab.com/chromion/rdio/app

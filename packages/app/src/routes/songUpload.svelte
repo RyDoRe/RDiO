@@ -41,9 +41,6 @@
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
-      headers: {
-        Accept: 'application/json'
-      },
       body: data
     })
 
@@ -71,6 +68,10 @@
     flex-direction: column;
     max-width: 350px;
   }
+
+  .message {
+    color: white;
+  }
 </style>
 
 <h1>Song Upload!</h1>
@@ -83,7 +84,7 @@
   <Input type="file" name="path" placeholder="songPath" />
   <Input type="text" name="artist" placeholder="artist" />
   <Button type="submit">Upload</Button>
-  <p>{message}</p>
+  <p class="message">{message}</p>
   {#if error}
     <p class="error">Error: {error}</p>
   {/if}
