@@ -10,6 +10,7 @@
 
 <script>
   import Input from '../../components/Input.svelte'
+  import Button from '../../components/Button.svelte'
   import ListItem from '../../components/ListItem.svelte'
   import ListItemText from '../../components/ListItemText.svelte'
   import Dialog from '../../components/Dialog.svelte'
@@ -148,14 +149,18 @@
     background-color: #3273dc;
     color: #fff;
   }
+
+  .createradioform {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+  }
 </style>
 
 {#if playlist}
   <h1>{playlist.name}</h1>
 
-  <button on:click={createRadio}>Radio erstellen</button>
-
-  <button on:click={() => { showCreateRadioDialog = true }}>Create Radio</button>
+  <Button on:click={() => { showCreateRadioDialog = true }}>Create Radio</Button>
 
   {#if playlist.songs}
     {#each playlist.songs as song, songIndex (song.id)}
@@ -189,11 +194,13 @@
 
 {#if showCreateRadioDialog}
   <Dialog onClose={handleClose} onConfirm={createRadio} title="Create a radio">
-    <Input placeholder="Name" bind:value={name} />
-    <textarea placeholder="Description" bind:value={description}></textarea>
-    <Input placeholder="Genre" bind:value={genre} />
-    {#if error}
-      <p class="error">Error: {error}</p>
-    {/if}
+    <div class="createradioform">
+      <Input placeholder="Name" bind:value={name} />
+      <textarea placeholder="Description" bind:value={description}></textarea>
+      <Input placeholder="Genre" bind:value={genre} />
+      {#if error}
+        <p class="error">Error: {error}</p>
+      {/if}
+    </div>
   </Dialog>
 {/if}
