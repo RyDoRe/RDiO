@@ -124,7 +124,7 @@ class RadioController extends Controller
 
         $play_sum = 0;
         $play_pos = $start_time % $total_playtime;
-        $i = 0;
+        $i = -1;
         foreach ($playfiles as $i => $playfile) {
             $play_sum += $playfile['playtime'];
             if ($play_sum > $play_pos) {
@@ -132,7 +132,7 @@ class RadioController extends Controller
             }
         }
 
-        if (!$i) {
+        if ($i === -1) {
             return;
         }
 
