@@ -1,151 +1,150 @@
 <script context="module">
-  export function preload(page, session) {
-    const { authenticated } = session;
+  export function preload (page, session) {
+    const { authenticated } = session
 
     if (!authenticated) {
-      return this.redirect(302, "login");
+      return this.redirect(302, 'login')
     }
   }
 </script>
 
 <script>
-  import Input from "../../components/Input.svelte";
-  import Button from "../../components/Button.svelte";
-  import ListItem from "../../components/ListItem.svelte";
-  import ListItemText from "../../components/ListItemText.svelte";
-  import Dialog from "../../components/Dialog.svelte";
-  import IconButton from "../../components/IconButton.svelte";
+  import Input from '../../components/Input.svelte'
+  import Button from '../../components/Button.svelte'
 
-  import { times } from "svelte-awesome/icons";
+  import Dialog from '../../components/Dialog.svelte'
+  import IconButton from '../../components/IconButton.svelte'
 
-  import { get, post, put, del } from "api";
-  import { stores, goto } from "@sapper/app";
-  import { onMount } from "svelte";
-  import { flip } from "svelte/animate";
+  import { times } from 'svelte-awesome/icons'
 
-  const { page } = stores();
-  const { id } = $page.params;
+  import { get, post, put, del } from 'api'
+  import { stores, goto } from '@sapper/app'
+  import { onMount } from 'svelte'
+  import { flip } from 'svelte/animate'
 
-  let playlist;
+  const { page } = stores()
+  const { id } = $page.params
+
+  let playlist
   // Visibilty of dialogs
-  let showRemoveDialog = false;
-  let showCreateRadioDialog = false;
+  let showRemoveDialog = false
+  let showCreateRadioDialog = false
 
-  let name;
-  let description;
-  let genre;
+  let name
+  let description
+  let genre
 
-  let _id;
-  let index;
-  let error;
+  let _id
+  let index
+  let error
 
-  let hovering = false;
+  let hovering = false
 
   onMount(async () => {
-    const response = await get(`playlists/${id}`);
+    const response = await get(`playlists/${id}`)
 
-    const json = await response.json();
+    const json = await response.json()
 
     if (response.status === 200) {
-      playlist = json;
+      playlist = json
     } else {
-      goto(404, `playlists/${id}`);
+      goto(404, `playlists/${id}`)
     }
-  });
+  })
 
   // Close the dialog and reset input values
-  function handleClose() {
-    showRemoveDialog = false;
-    showCreateRadioDialog = false;
-    error = null;
+  function handleClose () {
+    showRemoveDialog = false
+    showCreateRadioDialog = false
+    error = null
   }
 
   // Open remove dialog and store song data for confirmation
-  function openRemoveDialog(event, songId, songIndex) {
-    event.stopPropagation();
-    showRemoveDialog = true;
-    _id = songId;
-    index = songIndex;
+  function openRemoveDialog (event, songId, songIndex) {
+    event.stopPropagation()
+    showRemoveDialog = true
+    _id = songId
+    index = songIndex
   }
 
   // Remove a song
-  async function removeSong() {
-    const response = await del(`playlists/${id}/songs/${_id}`);
+  async function removeSong () {
+    const response = await del(`playlists/${id}/songs/${_id}`)
 
-    const json = await response.json();
+    const json = await response.json()
 
     if (response.status === 200) {
       playlist.songs = [
         ...playlist.songs.slice(0, index),
         ...playlist.songs.slice(index + 1)
-      ];
-      handleClose();
+      ]
+      handleClose()
     } else {
       if (json.error) {
-        error = json.error;
+        error = json.error
       } else {
         error = Object.keys(json)
           .map(key => {
-            return json[key].join("");
+            return json[key].join('')
           })
-          .join(" ");
+          .join(' ')
       }
     }
   }
 
-  async function drop(event, newPosition) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-    const currentPosition = parseInt(event.dataTransfer.getData("text/plain"));
-    const newSonglist = playlist.songs;
+  async function drop (event, newPosition) {
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'move'
+    const currentPosition = parseInt(event.dataTransfer.getData('text/plain'))
+    const newSonglist = playlist.songs
 
     if (currentPosition < newPosition) {
-      newSonglist.splice(newPosition + 1, 0, newSonglist[currentPosition]);
-      newSonglist.splice(currentPosition, 1);
+      newSonglist.splice(newPosition + 1, 0, newSonglist[currentPosition])
+      newSonglist.splice(currentPosition, 1)
     } else {
-      newSonglist.splice(newPosition, 0, newSonglist[currentPosition]);
-      newSonglist.splice(currentPosition + 1, 1);
+      newSonglist.splice(newPosition, 0, newSonglist[currentPosition])
+      newSonglist.splice(currentPosition + 1, 1)
     }
 
     const response = await put(`playlists/${id}/songs`, {
       currentPosition: currentPosition + 1,
       newPosition: newPosition + 1
-    });
+    })
 
     if (response.status === 200) {
-      playlist.songs = newSonglist;
+      playlist.songs = newSonglist
     }
 
-    hovering = null;
+    hovering = null
   }
 
-  function dragstart(event, i) {
-    event.dataTransfer.effectAllow = "move";
-    event.dataTransfer.dropEffect = "move";
-    const start = i;
-    event.dataTransfer.setData("text/plain", start);
+  function dragstart (event, i) {
+    event.dataTransfer.effectAllow = 'move'
+    event.dataTransfer.dropEffect = 'move'
+    const start = i
+    event.dataTransfer.setData('text/plain', start)
   }
 
-  async function createRadio() {
-    const response = await post("radios", {
+  async function createRadio () {
+    const response = await post('radios', {
       name,
       description,
       genre,
       playlist_id: id
-    });
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (response.status === 200) {
-      handleClose();
+      handleClose()
     } else {
       if (json.error) {
-        error = json.error;
+        error = json.error
       } else {
         error = Object.keys(json)
           .map(key => {
-            return json[key].join("");
+            return json[key].join('')
           })
-          .join(" ");
+          .join(' ')
       }
     }
   }
@@ -186,10 +185,10 @@
 {#if playlist}
   <h1>{playlist.name}</h1>
 
-  {#if playlist.songs && playlist.songs.length != 0}
+  {#if playlist.songs && playlist.songs.length !== 0}
     <Button
       on:click={() => {
-        showCreateRadioDialog = true;
+        showCreateRadioDialog = true
       }}>
       Create Radio
     </Button>
@@ -211,7 +210,7 @@
           on:drop={event => drop(event, songIndex)}
           on:dragover={event => event.preventDefault()}
           on:dragenter={() => {
-            hovering = songIndex;
+            hovering = songIndex
           }}
           class:is-active={hovering === songIndex}>
           <td class="titeltH">{song.title}</td>

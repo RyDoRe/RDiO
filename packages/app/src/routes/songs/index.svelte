@@ -7,8 +7,7 @@
     }
   }
 </script>
-<script> import ListItem from '../../components/ListItem.svelte'
- import ListItemText from '../../components/ListItemText.svelte'
+<script> 
  import Dialog from '../../components/Dialog.svelte'
  import IconButton from '../../components/IconButton.svelte'
  import Input from '../../components/Input.svelte'
@@ -76,9 +75,9 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.
    const response = await get('playlists')
    const json = await response.json()
    playlists = json
-   if(playlists && playlists.length != 0){
-      playlistId = json[0].id
-   } 
+   if (playlists && playlists.length !== 0) {
+     playlistId = json[0].id
+   }
  }
 
  // Remove a song
@@ -195,7 +194,7 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.
 
   {#if showAddToPlaylistDialog}
   <Dialog onClose={handleCloseAddToPlaylist} onConfirm={addToPlaylist} title="add song to playlist">
-    {#if playlists && playlists.length != 0}
+    {#if playlists && playlists.length !== 0}
       <p>Select a playlist to add the song to</p>
       <select name="playListSelect" id="" bind:value={playlistId}>
         

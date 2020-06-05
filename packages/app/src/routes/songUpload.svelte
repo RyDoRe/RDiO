@@ -21,7 +21,7 @@
   async function uploadSong (event) {
     message = ''
     error = ''
-    
+  
     const {
       title,
       thumbnail,
@@ -30,8 +30,6 @@
       path,
       artist
     } = event.target
-
-
 
     var data = new FormData()
     data.append('title', title.value)

@@ -10,14 +10,13 @@
 
 <script>
   import IconButton from '../../components/IconButton.svelte'
-  import Button from "../../components/Button.svelte";
+  import Button from '../../components/Button.svelte'
   import Input from '../../components/Input.svelte'
   import ListItem from '../../components/ListItem.svelte'
   import ListItemText from '../../components/ListItemText.svelte'
   import Dialog from '../../components/Dialog.svelte'
-  import Icon from 'svelte-awesome/components/Icon.svelte'
 
-  import { edit, trash, plus } from 'svelte-awesome/icons'
+  import { edit, trash } from 'svelte-awesome/icons'
 
   import { get, post, put, del } from 'api'
   import { goto } from '@sapper/app'
