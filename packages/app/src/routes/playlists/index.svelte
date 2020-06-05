@@ -10,7 +10,7 @@
 
 <script>
   import IconButton from '../../components/IconButton.svelte'
-  import FloatingButton from '../../components/FloatingButton.svelte'
+  import Button from "../../components/Button.svelte";
   import Input from '../../components/Input.svelte'
   import ListItem from '../../components/ListItem.svelte'
   import ListItemText from '../../components/ListItemText.svelte'
@@ -159,6 +159,10 @@
 
 <h1>Playlists</h1>
 
+<Button class="addbutton" on:click={() => { showAddDialog = true }}>
+  Create Playlist
+</Button>
+
 {#if filteredPlaylists}
   <Input placeholder="Search..." bind:value={searchTerm} />
   {#each filteredPlaylists as playlist, playlistIndex (playlist.id)}
@@ -183,7 +187,7 @@
 {/if}
 
 {#if showEditDialog}
-  <Dialog onClose={handleClose} onConfirm={editPlaylist} title="Edit Playlist">
+  <Dialog onClose={handleClose} onConfirm={editPlaylist} title="Edit Playlistname">
     <Input placeholder="Name" bind:value={name} bind:ref={inputRef} on:enter={editPlaylist} />
     {#if error}
       <p class="error">Error: {error}</p>
@@ -200,6 +204,4 @@
   </Dialog>
 {/if}
 
-<FloatingButton class="addbutton" on:click={() => { showAddDialog = true }}>
-  <Icon data={plus} />
-</FloatingButton>
+

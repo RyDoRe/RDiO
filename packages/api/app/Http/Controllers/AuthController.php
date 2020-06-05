@@ -106,7 +106,14 @@ class AuthController extends BaseController
                 'regex:/[0-9]/',        // Must contain at least one digit
                 'regex:/[@$!%*#?&]/',   // Must contain a special character
             ]
-        ]);
+            ], [
+                'password.required' => 'You have to put in a password',
+                'password.min' => 'The password has to have at least 8 characters',
+                'password.regex' => 'Password must contain at least one number, both uppercase and lowercase letters and a special character.'
+            ]
+        );
+
+        
 
         try {
             $user = new User;
