@@ -34,6 +34,7 @@
     }
   })
 
+  // function call for updatting the user information
   async function updateUser (event) {
     const response = await put(`users/${id}`, {
       name: event.target.name.value,
@@ -46,6 +47,7 @@
 
     const json = await response.json()
 
+    // check if function call was successful
     if (response.status === 200) {
       error = null
     } else {
@@ -76,6 +78,9 @@
   }
 </style>
 
+<!--
+  form for updatting the given user information
+-->
 {#if user}
   <form on:submit|preventDefault={updateUser}>
     <label for="name">Username: </label>

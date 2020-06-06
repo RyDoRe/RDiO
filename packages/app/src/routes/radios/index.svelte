@@ -9,6 +9,8 @@
 </script>
 
 <script>
+  import { stores } from '@sapper/app'
+
   import IconButton from '../../components/IconButton.svelte'
   import Dialog from '../../components/Dialog.svelte'
   import Icon from 'svelte-awesome/components/Icon.svelte'
@@ -24,7 +26,6 @@
   let myRadios
   let radios
   let favorites
-
   let myFilteredRadios
   let filteredRadios
 
@@ -34,14 +35,25 @@
   let index
   let error
 
+  const { session } = stores()
+
   // Search
   let searchTerm = ''
-  // Filter playlists based on the searchTerm
-  $: radios && (filteredRadios = radios.filter(radio => radio.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  radio.user.name.toLowerCase().includes(searchTerm.toLowerCase())))
+  // Filter other user radios based on the searchTerm
+  $: radios &&
+    (filteredRadios = radios.filter(
+      radio =>
+        radio.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        radio.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ))
 
-  $: myRadios && (myFilteredRadios = myRadios.filter(myRadio => myRadio.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  myRadio.user.name.toLowerCase().includes(searchTerm.toLowerCase())))
+  // Filter own  radios based on the searchTerm
+  $: myRadios &&
+    (myFilteredRadios = myRadios.filter(
+      myRadio =>
+        myRadio.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        myRadio.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ))
 
   onMount(async () => {
     const responseMyRadios = await get('radios/my')
@@ -66,11 +78,13 @@
     }
   })
 
+  // function call to start the radiostream
   function playRadio (event, radioId) {
     event.stopPropagation()
     src.update(s => `${baseURL}/radios/${radioId}/stream`)
   }
 
+  // function call to activate own radio
   async function activateRadio (event, radioId, radioIndex) {
     event.stopPropagation()
     const response = await put(`radios/${radioId}/activate`)
@@ -96,6 +110,7 @@
     error = null
   }
 
+  // Open the delete dialog
   function openDeleteDialog (event, radioId, radioIndex) {
     event.stopPropagation()
     showDeleteDialog = true
@@ -103,6 +118,7 @@
     index = radioIndex
   }
 
+  // function call to delete the radio
   async function deleteRadio () {
     const response = await del(`radios/${id}`)
 
@@ -154,63 +170,81 @@ async function toggleFavorite (event, radioId) {
 </style>
 
 <h1>Radios</h1>
-  <Input placeholder="Search..." bind:value={searchTerm} />
-  <table style="width:100%">
-      <tr>
-        <h3>My radios</h3>
-      </tr>
-      <tr>
-        <th>Radioname</th>
-        <th>Creator</th>
-        <th></th>
-      </tr>
-{#if myFilteredRadios && favorites}
 
-    {#each myFilteredRadios as radio, radioIndex (radio.id)}
-            <tr>
-              <td class="titeltH">{radio.name}</td>
-              <td style="text-align: center">{radio.user.name}</td>
-
-              <td>
-                <IconButton disabled={!radio.active} icon={play} on:click={e => playRadio(e, radio.id)} />
-                <div class="iconbutton" class:radio-on={radio.active} class:radio-off={!radio.active} on:click={e => activateRadio(e, radio.id, radioIndex)}>
-                  <Icon  data={powerOff} />
-                </div>
-                <IconButton icon={times} on:click={e => openDeleteDialog(e, radio.id, radioIndex)} />
-                <IconButton disabled={!radio.active} icon={favorites.find(_radio => _radio.id === radio.id) ? heart : heartO} on:click={e => toggleFavorite(e, radio.id, radioIndex)} />
-              </td>
-            </tr>
-    {/each}
-
-{/if}
-<tr>
-  <td colspan="3">
-  <hr>
-  </td>
-
-
-
-</tr>
-<tr><h3>Other radios</h3></tr>
-
-
-{#if filteredRadios && favorites}
-      <tr>
-        <th></th>
-      </tr>
-  {#each filteredRadios as radio, radioIndex (radio.id)}
+<Input placeholder="Search..." bind:value={searchTerm} />
+<table style="width:100%">
+  {#if $session.role !== 'user'}
     <tr>
-      <td class="titeltH">{radio.name}</td>
-      <td style="text-align: center">{radio.user.name}</td>
-
-      <td>
-        <IconButton icon={play} on:click={e => playRadio(e, radio.id)} />
-        <IconButton disabled={!radio.active} icon={favorites.find(_radio => _radio.id === radio.id) ? heart : heartO} on:click={e => toggleFavorite(e, radio.id)} />
-      </td>
+      <h3>My radios</h3>
     </tr>
-  {/each}
+    <tr>
+      <th>Radioname</th>
+      <th>Creator</th>
+      <th></th>
+    </tr>
 
-{/if}
+    {#if myFilteredRadios && favorites}
+      {#each myFilteredRadios as radio, radioIndex (radio.id)}
+        <tr>
+          <td class="titeltH">{radio.name}</td>
+          <td style="text-align: center">{radio.user.name}</td>
+
+          <td>
+            <IconButton
+              disabled={!radio.active}
+              icon={play}
+              on:click={e => playRadio(e, radio.id)} />
+            <div
+              class="iconbutton"
+              class:radio-on={radio.active}
+              class:radio-off={!radio.active}
+              on:click={e => activateRadio(e, radio.id, radioIndex)}>
+              <Icon data={powerOff} />
+            </div>
+            <IconButton
+              icon={times}
+              on:click={e => openDeleteDialog(e, radio.id, radioIndex)} />
+            <IconButton disabled={!radio.active} icon={favorites.find(_radio => _radio.id === radio.id) ? heart : heartO} on:click={e => toggleFavorite(e, radio.id, radioIndex)} />
+          </td>
+        </tr>
+      {/each}
+    {/if}
+    <tr>
+      <td colspan="3">
+        <hr>
+      </td>
+
+    </tr>
+    <tr>
+      <h3>Other radios</h3>
+    </tr>
+  {:else}
+    <tr>
+      <h3>Radios</h3>
+    </tr>
+    <tr>
+      <th>Radioname</th>
+      <th>Creator</th>
+      <th></th>
+    </tr>
+  {/if}
+
+  {#if filteredRadios && favorites}
+    <tr>
+      <th></th>
+    </tr>
+    {#each filteredRadios as radio, radioIndex (radio.id)}
+      <tr>
+        <td class="titeltH">{radio.name}</td>
+        <td style="text-align: center">{radio.user.name}</td>
+
+        <td>
+          <IconButton icon={play} on:click={e => playRadio(e, radio.id)} />
+          <IconButton disabled={!radio.active} icon={favorites.find(_radio => _radio.id === radio.id) ? heart : heartO} on:click={e => toggleFavorite(e, radio.id)} />
+        </td>
+      </tr>
+    {/each}
+  {/if}
 </table>
 {#if showDeleteDialog}
   <Dialog onClose={handleClose} onConfirm={deleteRadio} title="Delete radio">

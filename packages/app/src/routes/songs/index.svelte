@@ -32,7 +32,7 @@
  // Search
  let searchTerm = ''
  let filteredSongs
- // Filter playlists based on the searchTerm
+ // Filter songs based on the searchTerm
  $: songs && (filteredSongs = songs.filter(song => song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
 song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.toLowerCase().includes(searchTerm.toLowerCase())))
 
@@ -100,6 +100,7 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.
    }
  }
 
+// function for adding a song to a playlist
  async function addToPlaylist () {
    const response = await post(`playlists/${playlistId}/songs/${_id}`)
 

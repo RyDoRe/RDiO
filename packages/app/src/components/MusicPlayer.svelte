@@ -27,6 +27,7 @@
       }
     })
 
+    // function to start the player
     function play () {
       audio.play()
       setInterval(() => {
@@ -35,11 +36,13 @@
       togglePlay = 1
     }
 
+    // function to stop the player
     function stop () {
       audio.pause()
       togglePlay = 0
     }
 
+    // function to format the given timeformat
     function formatTime (_seconds = 0) {
       const time = Math.round(_seconds)
       const minutes = Math.floor(time / 60)

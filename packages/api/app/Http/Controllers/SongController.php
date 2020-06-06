@@ -16,7 +16,7 @@ class SongController extends Controller
 {
     use PlaylistSongTrait;
     /**
-     * upload
+     * upload a Song
      *
      * @param  Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -24,6 +24,7 @@ class SongController extends Controller
     public function upload(Request $request)
     {
 
+        //validate the given Song-Information
         $this->validate($request, [
             'title' => 'required',
             'thumbnail' => 'nullable|sometimes|image',
@@ -32,8 +33,9 @@ class SongController extends Controller
             'path' => 'required|file|mimes:mpga',
             'artist' => 'required',
         ]);
-
-        $artist = strtolower($request->input('artist'));
+        
+        //validate if given artist already exists
+        $artist = (mb_strtolower($request->input('artist')));
         $artistId = '';
         $artistQuery = Artist::where('name', $artist)->first();
         if (empty($artistQuery)) {
@@ -46,6 +48,7 @@ class SongController extends Controller
             $artistId = $artistQuery->id;
         }
 
+        //validate if combination of song and artist already exists for the given user
         $title = strtolower($request->input('title'));
         $songQuery = Song::where('title', $title)->where('user_id', $request->auth->id)
         ->where('artist_id', $artistId)->first();
@@ -54,10 +57,10 @@ class SongController extends Controller
             return response()->json(['Song' => ['Song already exists!']], 418);
         }
 
-
+        //validate if thumbnail got uploaded and if so, checks if
+        //needed directory exists to save it to or to choose a dummy thumbnail for the song
         $upload_dir_thumbnails = '';
         $songs_thumbnail_name = '';
-
         if (!empty($request->file('thumbnail'))) {
             $upload_dir_thumbnails = storage_path() . '/app/' . $request->auth->id . '/thumbnails/';
             $songs_thumbnail_name = $request->input('title') . '_thumbnail_' . time() . '.' .
@@ -73,19 +76,21 @@ class SongController extends Controller
             $songs_thumbnail_name =  'logo.jpg';
         }
 
+
+        //saves the songfile to the storage
         $upload_dir_songs = storage_path() . '/app/' . $request->auth->id . '/songs/';
         $songs_name = $request->input('title') . '_' . time() . '.mp3';
 
         if (!is_dir($upload_dir_songs)) {
             File::makeDirectory($upload_dir_songs, 0751, true);
         }
-
         $request->file('path')->move($upload_dir_songs, $songs_name);
+
 
         $songPath = $upload_dir_songs . $songs_name;
         $thumbnailPath = $upload_dir_thumbnails . $songs_thumbnail_name;
 
-
+        //creates song object and saves it to the database
         $song = new Song;
         $song->title = $request->input('title');
         $song->thumbnail = $thumbnailPath;
@@ -94,8 +99,8 @@ class SongController extends Controller
         $song->path = $songPath;
         $song->artist_id = $artistId;
         $song->user_id = $request->auth->id;
-
         $song->save();
+
         return response()->json(['message' => 'Uploaded song.']);
     }
     
@@ -107,10 +112,10 @@ class SongController extends Controller
      */
     public function showAllUserSongs(Request $request)
     {
-        // Search in the playlist of the authenticated user
+        // searches for all songs associcated with the the user
         $songs = $request->auth->songs()->with('artist')->get();
 
-        // No playlist found
+        // No songs found
         if (empty($songs)) {
             return response()->json(['message' => 'Could not find songs.'], 404);
         }
@@ -134,18 +139,20 @@ class SongController extends Controller
         
 
         try {
-            // Search in the playlist of the authenticated user
+            // Search for the song with the specific id
             $songs = $request->auth->songs->find($id);
 
-            // No playlist found
+            // Song not found
             if (empty($songs)) {
                 return response()->json(['message' => 'Could not find song.'], 404);
             }
-
+            
+            //delete files if existent
             File::delete($songs->path);
             File::delete($songs->thumbnail);
 
             
+            //searches for all relations of the song and deletes them, afterwards the song
             $playlistSongRelations = DB::table('playlist_song')->where('song_id', $id)->get();
 
             foreach ($playlistSongRelations as $playlistSongrelation) {
@@ -155,7 +162,6 @@ class SongController extends Controller
                     return response()->json(['message' => 'Could not remove song from playlist.'], 400);
                 }
             }
-
             $songs->delete();
 
             return response()->json(['message' => 'Deleted Song'], 200);

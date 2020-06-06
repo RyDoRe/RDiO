@@ -19,6 +19,7 @@
 
   let error
 
+  // function for logging in a valid user
   async function login (event) {
     const response = await post('auth/login', {
       email: event.target.email.value,
@@ -27,6 +28,7 @@
 
     const json = await response.json()
 
+    // check if request was valid and redirecting him accordingly
     if (response.status === 200) {
       session.set({
         authenticated: true,
@@ -58,8 +60,16 @@
   }
 </style>
 
+<svelte:head>
+	<title>RDIO - Login</title>
+</svelte:head>
+
 <h1>Login</h1>
 
+
+<!--
+  form for login information
+-->
 <form on:submit|preventDefault={login}>
   <Input name="email" placeholder="Email"/>
   <Input type="password" name="password" placeholder="Password"/>

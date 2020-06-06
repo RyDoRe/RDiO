@@ -17,6 +17,7 @@
 
   let error
 
+  // function for registering a new user
   async function register (event) {
     const {
       name,
@@ -32,6 +33,7 @@
       password_confirmation: passwordConfirmation.value
     })
 
+    // check if the request was successful
     if (response.status === 201) {
       goto('/login')
     } else {
@@ -42,7 +44,6 @@
         error = Object.keys(json).map(key => {
           return json[key].join('')
         }).join(' ')
-        // consolse.log(error)
       }
     }
   }
@@ -59,8 +60,15 @@
   }
 </style>
 
+<svelte:head>
+	<title>RDIO - Register</title>
+</svelte:head>
+
 <h1>Register</h1>
 
+<!--
+  form for submitting the register information
+-->
 <form on:submit|preventDefault={register}>
   <Input type="text" name="name" placeholder="Name"/>
   <Input type="text" name="email" placeholder="Email"/>

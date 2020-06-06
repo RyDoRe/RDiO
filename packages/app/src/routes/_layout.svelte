@@ -16,6 +16,10 @@ import Toast from '../components/Toast.svelte'
 	}
 </style>
 
+
+<!--
+	general layout of the website
+-->
 <Nav {segment}/>
 
 <main>
