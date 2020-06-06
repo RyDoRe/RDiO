@@ -155,7 +155,7 @@ async function toggleFavorite (event, radioId) {
 
 <h1>Radios</h1>
   <Input placeholder="Search..." bind:value={searchTerm} />
-  <table style="width:100%">  
+  <table style="width:100%">
       <tr>
         <h3>My radios</h3>
       </tr>
@@ -164,7 +164,7 @@ async function toggleFavorite (event, radioId) {
         <th>Creator</th>
         <th></th>
       </tr>
-{#if myFilteredRadios}
+{#if myFilteredRadios && favorites}
 
     {#each myFilteredRadios as radio, radioIndex (radio.id)}
             <tr>
@@ -181,20 +181,20 @@ async function toggleFavorite (event, radioId) {
               </td>
             </tr>
     {/each}
-  
+
 {/if}
 <tr>
   <td colspan="3">
   <hr>
   </td>
-  
 
-  
+
+
 </tr>
 <tr><h3>Other radios</h3></tr>
 
 
-{#if filteredRadios}
+{#if filteredRadios && favorites}
       <tr>
         <th></th>
       </tr>
@@ -209,7 +209,7 @@ async function toggleFavorite (event, radioId) {
       </td>
     </tr>
   {/each}
-  
+
 {/if}
 </table>
 {#if showDeleteDialog}
