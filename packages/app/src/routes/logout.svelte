@@ -11,7 +11,7 @@
 
   const { session } = stores()
 
-  //reset autentication and username
+  // reset autentication and username
   session.set({ authenticated: false, username: '' })
 
   goto('/login')

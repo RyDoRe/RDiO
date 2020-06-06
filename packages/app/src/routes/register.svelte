@@ -17,7 +17,7 @@
 
   let error
 
-  //function for registering a new user
+  // function for registering a new user
   async function register (event) {
     const {
       name,
@@ -33,7 +33,7 @@
       password_confirmation: passwordConfirmation.value
     })
 
-    //check if the request was successful
+    // check if the request was successful
     if (response.status === 201) {
       goto('/login')
     } else {

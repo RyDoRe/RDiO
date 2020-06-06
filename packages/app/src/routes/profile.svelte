@@ -30,7 +30,7 @@
     }
   })
 
-  //function for updating the user information
+  // function for updating the user information
   async function updateUser (event) {
     const response = await put('users/me', {
       name: event.target.name.value,
@@ -42,7 +42,7 @@
 
     const json = await response.json()
 
-    //check if the request was successful
+    // check if the request was successful
     if (response.status === 200) {
       session.update(store => {
         store.username = json.name

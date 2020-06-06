@@ -34,7 +34,7 @@
     }
   })
 
-  //function call for updatting the user information
+  // function call for updatting the user information
   async function updateUser (event) {
     const response = await put(`users/${id}`, {
       name: event.target.name.value,
@@ -47,7 +47,7 @@
 
     const json = await response.json()
 
-    //check if function call was successful
+    // check if function call was successful
     if (response.status === 200) {
       error = null
     } else {

@@ -100,7 +100,7 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.
    }
  }
 
-//function for adding a song to a playlist
+// function for adding a song to a playlist
  async function addToPlaylist () {
    const response = await post(`playlists/${playlistId}/songs/${_id}`)
 

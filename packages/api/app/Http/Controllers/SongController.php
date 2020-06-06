@@ -112,7 +112,7 @@ class SongController extends Controller
      */
     public function showAllUserSongs(Request $request)
     {
-        // searches for all songs associcated with the the user 
+        // searches for all songs associcated with the the user
         $songs = $request->auth->songs()->with('artist')->get();
 
         // No songs found

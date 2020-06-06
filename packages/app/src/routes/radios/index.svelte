@@ -1,54 +1,51 @@
 <script context="module">
-  export function preload(page, session) {
-    const { authenticated } = session;
+  export function preload (page, session) {
+    const { authenticated } = session
 
     if (!authenticated) {
-      return this.redirect(302, "login");
+      return this.redirect(302, 'login')
     }
   }
 </script>
 
 <script>
-  import { stores } from "@sapper/app";
+  import { stores } from '@sapper/app'
 
-  import IconButton from "../../components/IconButton.svelte";
-  import Dialog from "../../components/Dialog.svelte";
-  import Icon from "svelte-awesome/components/Icon.svelte";
-  import Input from "../../components/Input.svelte";
+  import IconButton from '../../components/IconButton.svelte'
+  import Dialog from '../../components/Dialog.svelte'
+  import Icon from 'svelte-awesome/components/Icon.svelte'
+  import Input from '../../components/Input.svelte'
 
-
-  import { src } from "../../store";
+  import { src } from '../../store'
 
   import { play, powerOff, times, heart, heartO } from 'svelte-awesome/icons'
 
   import { get, post, put, del, baseURL } from 'api'
   import { onMount } from 'svelte'
 
+  let myRadios
+  let radios
+  let favorites
+  let myFilteredRadios
+  let filteredRadios
 
+  let showDeleteDialog = false
 
-  let myRadios;
-  let radios;
-  let favorites;
-  let myFilteredRadios;
-  let filteredRadios;
+  let id
+  let index
+  let error
 
-  let showDeleteDialog = false;
-
-  let id;
-  let index;
-  let error;
-
-  const { session } = stores();
+  const { session } = stores()
 
   // Search
-  let searchTerm = "";
+  let searchTerm = ''
   // Filter other user radios based on the searchTerm
   $: radios &&
     (filteredRadios = radios.filter(
       radio =>
         radio.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         radio.user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ));
+    ))
 
   // Filter own  radios based on the searchTerm
   $: myRadios &&
@@ -56,23 +53,22 @@
       myRadio =>
         myRadio.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         myRadio.user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ));
+    ))
 
   onMount(async () => {
-    const responseMyRadios = await get("radios/my");
-    const jsonMyRadios = await responseMyRadios.json();
+    const responseMyRadios = await get('radios/my')
+    const jsonMyRadios = await responseMyRadios.json()
 
     if (responseMyRadios.status === 200) {
-      myRadios = jsonMyRadios;
+      myRadios = jsonMyRadios
     }
 
-    const responseRadios = await get("radios");
-    const jsonRadios = await responseRadios.json();
+    const responseRadios = await get('radios')
+    const jsonRadios = await responseRadios.json()
 
     if (responseRadios.status === 200) {
-      radios = jsonRadios;
+      radios = jsonRadios
     }
-
 
     const responseFavorites = await get('radios/favorites')
     const jsonFavorites = await responseFavorites.json()
@@ -82,54 +78,53 @@
     }
   })
 
-
-  //function call to start the radiostream
-  function playRadio(event, radioId) {
-    event.stopPropagation();
-    src.update(s => `${baseURL}/radios/${radioId}/stream`);
+  // function call to start the radiostream
+  function playRadio (event, radioId) {
+    event.stopPropagation()
+    src.update(s => `${baseURL}/radios/${radioId}/stream`)
   }
 
-  //function call to activate own radio
-  async function activateRadio(event, radioId, radioIndex) {
-    event.stopPropagation();
-    const response = await put(`radios/${radioId}/activate`);
+  // function call to activate own radio
+  async function activateRadio (event, radioId, radioIndex) {
+    event.stopPropagation()
+    const response = await put(`radios/${radioId}/activate`)
 
-    const json = await response.json();
+    const json = await response.json()
     if (response.status === 200) {
       myRadios = myRadios.map((radio, _radioIndex) => {
         if (radioIndex !== _radioIndex) {
-          return radio;
+          return radio
         }
 
         return {
           ...radio,
           active: json.active
-        };
-      });
+        }
+      })
     }
   }
 
   // Close the dialog and reset input values
-  function handleClose() {
-    showDeleteDialog = false;
-    error = null;
+  function handleClose () {
+    showDeleteDialog = false
+    error = null
   }
 
-  //Open the delete dialog
-  function openDeleteDialog(event, radioId, radioIndex) {
-    event.stopPropagation();
-    showDeleteDialog = true;
-    id = radioId;
-    index = radioIndex;
+  // Open the delete dialog
+  function openDeleteDialog (event, radioId, radioIndex) {
+    event.stopPropagation()
+    showDeleteDialog = true
+    id = radioId
+    index = radioIndex
   }
 
-  //function call to delete the radio
-  async function deleteRadio() {
-    const response = await del(`radios/${id}`);
+  // function call to delete the radio
+  async function deleteRadio () {
+    const response = await del(`radios/${id}`)
 
     if (response.status === 200) {
-      myRadios = [...myRadios.slice(0, index), ...myRadios.slice(index + 1)];
-      handleClose();
+      myRadios = [...myRadios.slice(0, index), ...myRadios.slice(index + 1)]
+      handleClose()
     }
   }
 async function toggleFavorite (event, radioId) {

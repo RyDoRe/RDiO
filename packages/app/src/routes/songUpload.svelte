@@ -1,59 +1,58 @@
 <script context="module">
-  export function preload(page, session) {
-    const { authenticated } = session;
+  export function preload (page, session) {
+    const { authenticated } = session
 
     if (!authenticated) {
-      return this.redirect(302, "login");
+      return this.redirect(302, 'login')
     }
   }
 </script>
 
 <script>
-  import Input from "../components/Input.svelte";
-  import Button from "../components/Button.svelte";
+  import Input from '../components/Input.svelte'
+  import Button from '../components/Button.svelte'
 
-  import { baseURL } from "api";
+  import { baseURL } from 'api'
 
-  let error;
-  let message = "";
-  let rating = 0;
+  let error
+  let message = ''
+  let rating = 0
 
+  // function for uploading the song form
+  async function uploadSong (event) {
+    message = ''
+    error = ''
 
-  //function for uploading the song form
-  async function uploadSong(event) {
-    message = "";
-    error = "";
+    const { title, thumbnail, genre, rating, path, artist } = event.target
 
-    const { title, thumbnail, genre, rating, path, artist } = event.target;
-
-    var data = new FormData();
-    data.append("title", title.value);
-    data.append("path", path.files[0]);
-    data.append("thumbnail", thumbnail.files[0] || "");
-    data.append("genre", genre.value);
-    data.append("rating", rating.value);
-    data.append("artist", artist.value);
+    var data = new FormData()
+    data.append('title', title.value)
+    data.append('path', path.files[0])
+    data.append('thumbnail', thumbnail.files[0] || '')
+    data.append('genre', genre.value)
+    data.append('rating', rating.value)
+    data.append('artist', artist.value)
 
     const response = await fetch(`${baseURL}/songUpload`, {
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
       body: data
-    });
+    })
 
-    //Check if songupload was successful
+    // Check if songupload was successful
     if (response.status === 200) {
-      message = "Song was uploaded!";
+      message = 'Song was uploaded!'
     } else {
-      const json = await response.json();
+      const json = await response.json()
       if (json.error) {
-        error = json.error;
+        error = json.error
       } else {
         error = Object.keys(json)
           .map(key => {
-            return json[key].join("");
+            return json[key].join('')
           })
-          .join(" ");
+          .join(' ')
       }
     }
   }

@@ -19,7 +19,7 @@
 
   let error
 
-  //function for logging in a valid user
+  // function for logging in a valid user
   async function login (event) {
     const response = await post('auth/login', {
       email: event.target.email.value,
@@ -28,7 +28,7 @@
 
     const json = await response.json()
 
-    //check if request was valid and redirecting him accordingly
+    // check if request was valid and redirecting him accordingly
     if (response.status === 200) {
       session.set({
         authenticated: true,
