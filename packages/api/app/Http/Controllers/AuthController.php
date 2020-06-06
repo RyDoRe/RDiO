@@ -109,8 +109,8 @@ class AuthController extends BaseController
             ], [
                 'password.required' => 'You have to put in a password',
                 'password.min' => 'The password has to have at least 8 characters',
-                'password.regex' => 'Password must contain at least one number, both 
-                                    uppercase and lowercase letters and a special character.'
+                // @phpstan-ignore-next-line
+                'password.regex' => 'Password must contain at least one number, both uppercase and lowercase letters and a special character.'
             ]);
 
         
