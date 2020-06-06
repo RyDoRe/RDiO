@@ -7,6 +7,12 @@
         <property name="allowUnusedFunctionParameters" value="true"/>
     </properties>
   </rule>
+  <rule ref="Generic.Files.LineLength">
+          <properties>
+              <property name="lineLimit" value="500"/>
+              <property name="absoluteLineLimit" value="0"/>
+          </properties>
+  </rule>
 
   <file>app/</file>
   <exclude-pattern>*/bootsrap/*</exclude-pattern>

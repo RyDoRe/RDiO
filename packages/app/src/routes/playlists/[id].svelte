@@ -11,8 +11,7 @@
 <script>
   import Input from '../../components/Input.svelte'
   import Button from '../../components/Button.svelte'
-  import ListItem from '../../components/ListItem.svelte'
-  import ListItemText from '../../components/ListItemText.svelte'
+
   import Dialog from '../../components/Dialog.svelte'
   import IconButton from '../../components/IconButton.svelte'
 
@@ -75,15 +74,20 @@
     const json = await response.json()
 
     if (response.status === 200) {
-      playlist.songs = [...playlist.songs.slice(0, index), ...playlist.songs.slice(index + 1)]
+      playlist.songs = [
+        ...playlist.songs.slice(0, index),
+        ...playlist.songs.slice(index + 1)
+      ]
       handleClose()
     } else {
       if (json.error) {
         error = json.error
       } else {
-        error = Object.keys(json).map(key => {
-          return json[key].join('')
-        }).join(' ')
+        error = Object.keys(json)
+          .map(key => {
+            return json[key].join('')
+          })
+          .join(' ')
       }
     }
   }
@@ -136,9 +140,11 @@
       if (json.error) {
         error = json.error
       } else {
-        error = Object.keys(json).map(key => {
-          return json[key].join('')
-        }).join(' ')
+        error = Object.keys(json)
+          .map(key => {
+            return json[key].join('')
+          })
+          .join(' ')
       }
     }
   }
@@ -155,36 +161,78 @@
     flex-direction: column;
     max-width: 300px;
   }
+
+  table {
+    text-overflow: ellipsis;
+  }
+
+  td,
+  th {
+    padding: 0px 10px 0px 0px;
+    text-align: center;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 20%;
+  }
+
+  .titeltH {
+    text-align: left;
+  }
 </style>
 
 {#if playlist}
   <h1>{playlist.name}</h1>
 
-  <Button on:click={() => { showCreateRadioDialog = true }}>Create Radio</Button>
+  {#if playlist.songs && playlist.songs.length !== 0}
+    <Button
+      on:click={() => {
+        showCreateRadioDialog = true
+      }}>
+      Create Radio
+    </Button>
 
-  {#if playlist.songs}
-    {#each playlist.songs as song, songIndex (song.id)}
-      <div
-        class="listitemwrapper"
-        animate:flip
-        draggable={true}
-        on:dragstart={event => dragstart(event, songIndex)}
-        on:drop={event => drop(event, songIndex)}
-        on:dragover={event => event.preventDefault()}
-        on:dragenter={() => { hovering = songIndex }}
-        class:is-active={hovering === songIndex}
-      >
-        <ListItem>
-          <ListItemText>{song.title}</ListItemText>
-          <IconButton icon={times} on:click={e => openRemoveDialog(e, song.id, songIndex)} />
-        </ListItem>
-      </div>
-    {/each}
+    <table style="width:100%">
+      <tr>
+        <th>Titel</th>
+        <th>Rating</th>
+        <th>Genre</th>
+        <th>Artist</th>
+        <th />
+      </tr>
+      {#each playlist.songs as song, songIndex (song.id)}
+        <tr
+          class="listitemwrapper"
+          animate:flip
+          draggable={true}
+          on:dragstart={event => dragstart(event, songIndex)}
+          on:drop={event => drop(event, songIndex)}
+          on:dragover={event => event.preventDefault()}
+          on:dragenter={() => {
+            hovering = songIndex
+          }}
+          class:is-active={hovering === songIndex}>
+          <td class="titeltH">{song.title}</td>
+          <td style="text-align: center">{song.rating}/5</td>
+          <td>{song.genre}</td>
+          <td>{song.artist.name}</td>
+          <td>
+            <IconButton
+              icon={times}
+              on:click={e => openRemoveDialog(e, song.id, songIndex)} />
+          </td>
+        </tr>
+      {/each}
+    </table>
   {/if}
 {/if}
 
 {#if showRemoveDialog}
-  <Dialog onClose={handleClose} onConfirm={removeSong} title="Remove song from playlist">
+  <Dialog
+    onClose={handleClose}
+    onConfirm={removeSong}
+    title="Remove song from playlist">
     <p>Are you sure you want to remove this song?</p>
     {#if error}
       <p class="error">Error: {error}</p>
@@ -196,7 +244,7 @@
   <Dialog onClose={handleClose} onConfirm={createRadio} title="Create a radio">
     <div class="createradioform">
       <Input placeholder="Name" bind:value={name} />
-      <textarea placeholder="Description" bind:value={description}></textarea>
+      <textarea placeholder="Description" bind:value={description} />
       <Input placeholder="Genre" bind:value={genre} />
       {#if error}
         <p class="error">Error: {error}</p>
