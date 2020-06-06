@@ -1,7 +1,8 @@
 <script>
+    import Icon from 'svelte-awesome/components/Icon.svelte'
     import IconButton from './IconButton.svelte'
 
-    import { play as playIcon, pause as pauseIcon } from 'svelte-awesome/icons'
+    import { play as playIcon, pause as pauseIcon, volumeUp as volumeIcon } from 'svelte-awesome/icons'
 
     import { stores } from '@sapper/app'
     import { src } from '../store'
@@ -63,10 +64,13 @@
      position: fixed;
      bottom: 0;
      left: 0;
-     border-top: 1px solid black;
+     border-top: 1px solid  rgb(255, 100, 3);
+     box-shadow: inset 0px 1px 16px 7px rgba(0,0,0,0.31);
      display: flex;
      justify-content: center;
      align-items: center;
+     background-color: rgb(54, 54, 54);
+     line-height: .5;
  }
 
  input[type="range"]:disabled {
@@ -74,8 +78,32 @@
  }
 
  .time {
-   color: white;
+   color: rgb(207, 207, 207);
+   text-align: center;
+   font-weight: 100;
+   font-size: 1.5rem;
+   padding: 1rem;
+   line-height: 5rem;
  }
+
+ :global(.playericon) {
+   color: rgb(253, 253, 253) !important;
+ }
+ :global(.playericon:hover) {
+   color: rgb(255, 100, 3) !important;
+ }
+
+ .placeholder {
+   height: 60px;
+   border: 1px solid rgb(153, 153, 153);
+   box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.4);
+   }
+
+  :global(.volumeicon) {
+    margin-right: .5em;
+    margin-left: 1em;
+  }
+
 </style>
 
 {#if $session.authenticated}
@@ -86,13 +114,20 @@
         -->
     </div>
 
+  <ul>
+		<li><a href='.'><img class="placeholder" src="radioPlaceholder.png" alt="Radio Icon"></a></li>
+	</ul>
+
     <div class="playingBarControl">
       {#if togglePlay}
-        <IconButton icon={pauseIcon} on:click={stop}></IconButton>
+        <IconButton class="playericon" icon={pauseIcon} on:click={stop}></IconButton>
       {:else}
-        <IconButton disabled={!$src} icon={playIcon} on:click={play}></IconButton>
+        <IconButton class="playericon" disabled={!$src} icon={playIcon} on:click={play}></IconButton>
       {/if}
+        <Icon class="playericon volumeicon" data={volumeIcon} ></Icon>
     </div>
+
+
 
     <div class="playingBarVolume">
       <input type="range" min="0" max="100" bind:value={volume}>
