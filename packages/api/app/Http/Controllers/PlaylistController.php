@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Exceptions\Handler;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\PlaylistSongTrait;
+use Illuminate\Support\Facades\DB;
 
 class PlaylistController extends Controller
 {
@@ -149,16 +150,39 @@ class PlaylistController extends Controller
                 return response()->json(['message' => 'Could not find playlist.'], 404);
             }
 
+
             $song1 = $playlist->songs()->wherePivot('song_order', $currentPosition)->first();
             $song2 = $playlist->songs()->wherePivot('song_order', $newPosition)->first();
+
+            echo $song1;
+            echo $song2;
 
             // No song found
             if (empty($song1) || empty($song2)) {
                 return response()->json(['message' => 'Could not find song.'], 404);
             }
 
-            $playlist->songs()->updateExistingPivot($song1->id, ['song_order' => $newPosition]);
-            $playlist->songs()->updateExistingPivot($song2->id, ['song_order' => $currentPosition]);
+            $song1->pivot->song_order = $newPosition;
+            $song2->pivot->song_order = $currentPosition;
+
+            echo $song1;
+            echo $song2;
+
+            //switch song positions
+            try {
+                DB::beginTransaction();
+                DB::table('playlist_song')
+                ->where('song_order', $currentPosition)->where('playlist_id', $playlist->id)->where('id', $song1->pivot->id)
+                ->update(['song_order' => $newPosition]);
+  
+                DB::table('playlist_song')
+                ->where('song_order', $newPosition)->where('playlist_id', $playlist->id)->where('id', $song2->pivot->id)
+                ->update(['song_order' => $currentPosition]);
+                DB::commit();
+            } catch (\PDOException $e) {
+                // Woopsy
+                DB::rollBack();
+            }
 
             return response()->json(['message' => 'Updated song in playlist.'], 200);
         } catch (\Exception $e) {
