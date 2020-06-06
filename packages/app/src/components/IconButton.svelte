@@ -8,6 +8,9 @@
   export let icon = null
   export let disabled = false
 
+  let className = null
+  export { className as class }
+
   function handleClick (event) {
     event.stopPropagation()
     if (!disabled) dispatch('click', event)
@@ -16,7 +19,7 @@
 
 <style>
   .iconbutton {
-    padding: 12px;
+    padding: 20px;
     color: rgb(197, 197, 197);
     font-size: 1.5rem;
     text-align: center;
@@ -31,7 +34,7 @@
 
   .iconbutton:hover {
     background-color: rgb(197, 197, 197);
-    color: rgba(0, 0, 0, 0.54);
+    color: rgb(255, 100, 3);
   }
 
   .iconbuttondisabled {
@@ -45,6 +48,6 @@
   }
 </style>
 
-<div class="iconbutton" class:iconbuttondisabled={disabled} on:click={handleClick}>
+<div class="iconbutton {className}" class:iconbuttondisabled={disabled} on:click={handleClick}>
   <Icon data={icon} />
 </div>
