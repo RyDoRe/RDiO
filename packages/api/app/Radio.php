@@ -25,4 +25,14 @@ class Radio extends Model
     {
         return $this->belongsToMany('App\User', 'favorites', 'radio_id', 'user_id')->withTimestamps();
     }
+
+    /**
+     * The user that belong to the radio.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\User>
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }

@@ -7,8 +7,7 @@
     }
   }
 </script>
-<script> import ListItem from '../../components/ListItem.svelte'
- import ListItemText from '../../components/ListItemText.svelte'
+<script> 
  import Dialog from '../../components/Dialog.svelte'
  import IconButton from '../../components/IconButton.svelte'
  import Input from '../../components/Input.svelte'
@@ -35,7 +34,7 @@
  let filteredSongs
  // Filter playlists based on the searchTerm
  $: songs && (filteredSongs = songs.filter(song => song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-song.artist.name.toLowerCase().includes(searchTerm.toLowerCase())))
+song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.toLowerCase().includes(searchTerm.toLowerCase())))
 
  onMount(async () => {
    const response = await get('songs')
@@ -76,7 +75,9 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase())))
    const response = await get('playlists')
    const json = await response.json()
    playlists = json
-   playlistId = json[0].id
+   if (playlists && playlists.length !== 0) {
+     playlistId = json[0].id
+   }
  }
 
  // Remove a song
@@ -118,23 +119,57 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase())))
  }
 </script>
 
+<style>
+  table{
+    text-overflow: ellipsis;
+  }
+
+  td, th{
+    padding: 0px 10px 0px 0px;
+    text-align: center;
+    
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 20%;
+  }
+
+  .titeltH {
+    text-align: left;
+  }
+
+  
+
+
+
+</style>
+
 <h1>Songs</h1>
   {#if filteredSongs}
     <h2>{songs.length} Songs</h2>
     <Input placeholder="Search..." bind:value={searchTerm} />
-    {#each filteredSongs as song, songIndex (song.id)}
-      <div
-        class="listitemwrapper"
+    <table style="width:100%">  
+        <tr>
+          <th>Titel</th>
+          <th>Rating</th>
+          <th>Genre</th>
+          <th>Artist</th>
+          <th></th>
+        </tr>
+        {#each filteredSongs as song, songIndex (song.id)}
 
-      >
-        <ListItem>
-          <ListItemText>{song.title}</ListItemText>
-          <span style="color: white;">{song.artist.name}</span>
-          <IconButton icon={plus} on:click={e => openAddToPlaylistDialog(e, song.id, songIndex)} />
-          <IconButton icon={times} on:click={e => openRemoveDialog(e, song.id, songIndex)} />
-        </ListItem>
-      </div>
-    {/each}
+            <tr>
+              <td class="titeltH">{song.title}</td>
+              <td style="text-align: center">{song.rating}/5</td>
+              <td>{song.genre}</td>
+              <td>{song.artist.name}</td>
+              <td>
+                <IconButton icon={plus} on:click={e => openAddToPlaylistDialog(e, song.id, songIndex)} />
+                <IconButton icon={times} on:click={e => openRemoveDialog(e, song.id, songIndex)} />
+              </td>
+            </tr>
+        {/each}
+     </table>  
   {/if}
 
   {#if showRemoveDialog}
@@ -148,16 +183,20 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase())))
 
   {#if showAddToPlaylistDialog}
   <Dialog onClose={handleCloseAddToPlaylist} onConfirm={addToPlaylist} title="add song to playlist">
-    <p>Select a playlist to add the song to</p>
-    <select name="playListSelect" id="" bind:value={playlistId}>
-      {#if playlists}
-        {#each playlists as playlist (playlist.id)}
-          <option value={playlist.id}>{playlist.name}</option>
-        {/each}
+    {#if playlists && playlists.length !== 0}
+      <p>Select a playlist to add the song to</p>
+      <select name="playListSelect" id="" bind:value={playlistId}>
+        
+          {#each playlists as playlist (playlist.id)}
+            <option value={playlist.id}>{playlist.name}</option>
+          {/each}
+      
+      </select>
+      {#if error}
+        <p class="error">Error: {error}</p>
       {/if}
-    </select>
-    {#if error}
-      <p class="error">Error: {error}</p>
+    {:else} 
+      <p>First you have to create a playlist!</p>
     {/if}
   </Dialog>
 {/if}

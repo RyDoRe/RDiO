@@ -17,7 +17,7 @@ class RadioController extends Controller
      */
     public function index(Request $request)
     {
-        $radios = Radio::where('user_id', '!=', $request->auth->id)->where('active', 1)->get();
+        $radios = Radio::where('user_id', '!=', $request->auth->id)->where('active', 1)->with('user')->get();
 
         return response()->json($radios);
     }
@@ -29,7 +29,7 @@ class RadioController extends Controller
      */
     public function indexUserRadios(Request $request)
     {
-        $radios = $request->auth->radios;
+        $radios = $request->auth->radios()->with('user')->get();
 
         return response()->json($radios);
     }

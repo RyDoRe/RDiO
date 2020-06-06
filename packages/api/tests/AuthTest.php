@@ -90,13 +90,13 @@ class AuthTest extends TestCase
     public function test_user_cannot_register_with_password_size_smaller_than_8()
     {
         $password = 'Hack!12';
-        $this->wrongPasswordHelper($password, 'The password must be at least 8 characters.');
+        $this->wrongPasswordHelper($password, 'The password has to have at least 8 characters');
     }
 
     public function test_user_cannot_register_with_password_without_capital_letter()
     {
         $password = 'hackme!1234';
-        $this->wrongPasswordHelper($password);
+        $this->wrongPasswordHelper($password,);
     }
 
     public function test_user_cannot_register_with_password_without_small_letter()
@@ -117,7 +117,7 @@ class AuthTest extends TestCase
         $this->wrongPasswordHelper($password);
     }
 
-    private function wrongPasswordHelper($password, $errorMessage = 'The password format is invalid.')
+    private function wrongPasswordHelper($password, $errorMessage = 'Password must contain at least one number, both uppercase and lowercase letters and a special character.')
     {
         $user = factory(User::class)->make();
 
