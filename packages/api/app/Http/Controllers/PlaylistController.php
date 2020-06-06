@@ -61,7 +61,7 @@ class PlaylistController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // Search in the playlist of the authenticated user
+        // Show the specified playlist of the authenticated user
         $playlist = $request->auth->playlists()->with('songs.artist')->find($id);
 
         // No playlist found
@@ -84,7 +84,7 @@ class PlaylistController extends Controller
             'name' => 'required',
         ]);
 
-        // Search in the playlist of the authenticated user
+        // Search the specified playlist of the authenticated user
         $playlist = $request->auth->playlists->find($id);
 
         // No playlist found
@@ -108,7 +108,7 @@ class PlaylistController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            // Search in the playlist of the authenticated user
+            // Search the specified playlist of the authenticated user
             $playlist = $request->auth->playlists->find($id);
 
             // No playlist found
@@ -141,7 +141,7 @@ class PlaylistController extends Controller
             $currentPosition = $request->input('currentPosition');
             $newPosition = $request->input('newPosition');
 
-            // Search in the playlist of the authenticated user
+            // Search the specified playlist of the authenticated user
             $playlist = $request->auth->playlists->find($id);
 
             // No playlist found
@@ -193,7 +193,7 @@ class PlaylistController extends Controller
      */
     public function addSongToPlaylist(Request $request, $playlistId, $songId)
     {
-        // Search in the playlist of the authenticated user
+        // Search the specified playlist of the authenticated user
         $playlist = $request->auth->playlists()->withCount('songs')->find($playlistId);
 
         // No playlist found
@@ -201,6 +201,7 @@ class PlaylistController extends Controller
             return response()->json(['message' => 'Could not find playlist.'], 404);
         }
 
+        //attach song to the playlist
         $playlist->songs()->attach($songId, ['song_order' => $playlist->songs_count + 1]);
 
         return response()->json('Song was successfully added to playlist.');

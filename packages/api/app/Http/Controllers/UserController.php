@@ -103,10 +103,10 @@ class UserController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            // Search in the playlist of the authenticated user
+            // Search for the user
             $user = User::find($id);
 
-            // No playlist found
+            // No user found
             if (empty($user)) {
                 return response()->json(['message' => 'Could not find user.'], 404);
             }

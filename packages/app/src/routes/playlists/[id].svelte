@@ -92,6 +92,7 @@
     }
   }
 
+  //function for dropping dragged songs in the current position of the playlist
   async function drop (event, newPosition) {
     event.preventDefault()
     event.dataTransfer.dropEffect = 'move'
@@ -118,6 +119,7 @@
     hovering = null
   }
 
+  //function to start dragging a song in the playlist
   function dragstart (event, i) {
     event.dataTransfer.effectAllow = 'move'
     event.dataTransfer.dropEffect = 'move'
@@ -125,6 +127,7 @@
     event.dataTransfer.setData('text/plain', start)
   }
 
+  //function call to create a radio out of the playlist
   async function createRadio () {
     const response = await post('radios', {
       name,
@@ -134,6 +137,7 @@
     })
 
     const json = await response.json()
+    //check if the funciton call was successful
     if (response.status === 200) {
       handleClose()
     } else {

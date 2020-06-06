@@ -178,10 +178,10 @@ class RadioController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            // Search in the playlist of the authenticated user
+            // find the specific radio
             $radio = $request->auth->radios->find($id);
 
-            // No playlist found
+            // No radio found
             if (empty($radio)) {
                 return response()->json(['message' => 'Could not find radio.'], 404);
             }

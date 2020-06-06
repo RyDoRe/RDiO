@@ -15,6 +15,10 @@
 	}
 </style>
 
+
+<!--
+	general layout of the website
+-->
 <Nav {segment}/>
 
 <main>

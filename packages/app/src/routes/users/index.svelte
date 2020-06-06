@@ -41,6 +41,7 @@
     error = null
   }
 
+  //open the delete user dialog
   function openDeleteDialog (event, userId, userIndex) {
     event.stopPropagation()
     showDeleteDialog = true
@@ -48,9 +49,11 @@
     index = userIndex
   }
 
+  //function call to delete the user
   async function deleteUser () {
     const response = await del(`users/${id}`)
 
+    //check if the delete was successful and closes the dialog if so
     if (response.status === 200) {
       users = [...users.slice(0, index), ...users.slice(index + 1)]
       handleClose()
@@ -66,6 +69,9 @@
 
 <h1>Users</h1>
 
+<!--
+  show all users
+-->
 {#if users}
   {#each users as user, userIndex (user.id)}
     <div animate:flip>
