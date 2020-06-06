@@ -163,7 +163,7 @@
   <Button on:click={() => { showCreateRadioDialog = true }}>Create Radio</Button>
 
   {#if playlist.songs}
-    {#each playlist.songs as song, songIndex (song.id)}
+    {#each playlist.songs as song, songIndex (songIndex)}
       <div
         class="listitemwrapper"
         animate:flip
