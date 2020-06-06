@@ -15,4 +15,15 @@ class Radio extends Model
     {
         return $this->belongsTo('App\Playlist');
     }
+
+
+        /**
+     * The user that belong to the radio.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\User>
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }
