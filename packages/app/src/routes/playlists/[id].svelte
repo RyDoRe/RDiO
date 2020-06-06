@@ -205,7 +205,7 @@
         <th>Artist</th>
         <th />
       </tr>
-      {#each playlist.songs as song, songIndex (song.id)}
+      {#each playlist.songs as song, songIndex (song.pivot.song_order)}
         <tr
           class="listitemwrapper"
           animate:flip
