@@ -1,6 +1,7 @@
 <script>
 	import Nav from '../components/Nav.svelte'
 	import MusicPlayer from '../components/MusicPlayer.svelte'
+import Toast from '../components/Toast.svelte'
 
 	export let segment
 </script>
@@ -26,3 +27,4 @@
 </main>
 
 <MusicPlayer />
+<Toast/>

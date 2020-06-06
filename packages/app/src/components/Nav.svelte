@@ -67,6 +67,7 @@
 	</ul>
   {#if $session.authenticated}
     <ul>
+      <li><a aria-current='{segment === 'favorites' ? 'page' : undefined }' href="favorites">favorites</a></li>
       <li><a aria-current='{segment === 'radios' ? 'page' : undefined }' href="radios">radios</a></li>
       {#if $session.role === 'broadcaster' || $session.role === 'admin'}
         <li><a aria-current='{segment === 'playlists' ? 'page' : undefined }' href="playlists">playlists</a></li>

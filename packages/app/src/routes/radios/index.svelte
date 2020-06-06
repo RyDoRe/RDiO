@@ -16,15 +16,19 @@
   import Icon from "svelte-awesome/components/Icon.svelte";
   import Input from "../../components/Input.svelte";
 
+
   import { src } from "../../store";
 
-  import { play, powerOff, times } from "svelte-awesome/icons";
+  import { play, powerOff, times, heart, heartO } from 'svelte-awesome/icons'
 
-  import { get, put, del, baseURL } from "api";
-  import { onMount } from "svelte";
+  import { get, post, put, del, baseURL } from 'api'
+  import { onMount } from 'svelte'
+
+
 
   let myRadios;
   let radios;
+  let favorites;
   let myFilteredRadios;
   let filteredRadios;
 
@@ -68,7 +72,16 @@
     if (responseRadios.status === 200) {
       radios = jsonRadios;
     }
-  });
+
+
+    const responseFavorites = await get('radios/favorites')
+    const jsonFavorites = await responseFavorites.json()
+
+    if (responseFavorites.status === 200) {
+      favorites = jsonFavorites
+    }
+  })
+
 
   //function call to start the radiostream
   function playRadio(event, radioId) {
@@ -119,6 +132,22 @@
       handleClose();
     }
   }
+async function toggleFavorite (event, radioId) {
+    const response = await post('radios/favorites', {
+      radio_id: radioId
+    })
+
+    const json = await response.json()
+    if (response.status === 200) {
+      const radio = favorites.findIndex(radio => radio.id === radioId)
+      if (radio >= 0) {
+        favorites = [...favorites.slice(0, radio), ...favorites.slice(radio + 1)]
+      } else {
+        favorites = [...favorites, { id: radioId }]
+      }
+      window.pushToast(json.message)
+    }
+  }
 </script>
 
 <style>
@@ -156,10 +185,10 @@
     <tr>
       <th>Radioname</th>
       <th>Creator</th>
-      <th />
+      <th></th>
     </tr>
 
-    {#if myFilteredRadios}
+    {#if myFilteredRadios && favorites}
       {#each myFilteredRadios as radio, radioIndex (radio.id)}
         <tr>
           <td class="titeltH">{radio.name}</td>
@@ -180,14 +209,14 @@
             <IconButton
               icon={times}
               on:click={e => openDeleteDialog(e, radio.id, radioIndex)} />
+            <IconButton disabled={!radio.active} icon={favorites.find(_radio => _radio.id === radio.id) ? heart : heartO} on:click={e => toggleFavorite(e, radio.id, radioIndex)} />
           </td>
         </tr>
       {/each}
     {/if}
     <tr>
-
       <td colspan="3">
-        <hr />
+        <hr>
       </td>
 
     </tr>
@@ -201,13 +230,13 @@
     <tr>
       <th>Radioname</th>
       <th>Creator</th>
-      <th />
+      <th></th>
     </tr>
   {/if}
 
-  {#if filteredRadios}
+  {#if filteredRadios && favorites}
     <tr>
-      <th />
+      <th></th>
     </tr>
     {#each filteredRadios as radio, radioIndex (radio.id)}
       <tr>
@@ -216,6 +245,7 @@
 
         <td>
           <IconButton icon={play} on:click={e => playRadio(e, radio.id)} />
+          <IconButton disabled={!radio.active} icon={favorites.find(_radio => _radio.id === radio.id) ? heart : heartO} on:click={e => toggleFavorite(e, radio.id)} />
         </td>
       </tr>
     {/each}

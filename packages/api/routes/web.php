@@ -44,6 +44,8 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
     $router->post('radios', 'RadioController@store');
     $router->put('radios/{id}/activate', 'RadioController@activate');
     $router->delete('radios/{id}', 'RadioController@destroy');
+    $router->get('radios/favorites', 'RadioController@getFavorites');
+    $router->post('radios/favorites', 'RadioController@toggleFavorite');
 });
 
 $router->group(['middleware' => 'jwt:admin'], function () use ($router) {
