@@ -87,4 +87,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany('App\Radio');
     }
+
+
+    /**
+     * The favorites of the users.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Radio>
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany('App\Radio', 'favorites', 'user_id', 'radio_id')->withTimestamps();
+    }
 }

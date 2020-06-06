@@ -162,11 +162,54 @@ class RadioController extends Controller
 
             for ($j = 0; $j < floor(strlen($buffer) / $settings['buffer_size']); $j++) {
                 echo substr($buffer, $j * $settings['buffer_size'], $settings['buffer_size']);
+                usleep(500000);
             }
 
             /* $o = $i; */
             $old_buffer = substr($buffer, $j * $settings['buffer_size']);
         }
+    }
+
+    /**
+     * Get user favorites.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFavorites(Request $request)
+    {
+        $favorites = $request->auth->favorites()->get();
+
+        return response()->json($favorites);
+    }
+
+    /**
+     * Toggle user favorites.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggleFavorite(Request $request)
+    {
+        $this->validate($request, [
+          'radio_id' => 'required|numeric',
+        ]);
+
+        $radio = Radio::find($request->input('radio_id'));
+
+        if (empty($radio)) {
+            return response()->json(['message' => 'Could not find radio.'], 404);
+        }
+
+        $favorite = $request->auth->favorites()->find($request->input('radio_id'));
+
+        if (empty($favorite)) {
+            // @phpstan-ignore-next-line
+            $radio->favorites()->attach($request->auth->id);
+            return response()->json(['message' => 'Added Favorite.']);
+        }
+
+        // @phpstan-ignore-next-line
+        $request->auth->favorites()->detach($radio->id);
+        return response()->json(['message' => 'Removed Favorite.']);
     }
 
     /**
