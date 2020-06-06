@@ -42,7 +42,7 @@
         error = Object.keys(json).map(key => {
           return json[key].join('')
         }).join(' ')
-        console.log(error)
+        // consolse.log(error)
       }
     }
   }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Playlist;
+use App\Song;
 use Validator;
 use Illuminate\Http\Request;
 use App\Exceptions\Handler;
@@ -61,7 +62,7 @@ class PlaylistController extends Controller
     public function show(Request $request, $id)
     {
         // Search in the playlist of the authenticated user
-        $playlist = $request->auth->playlists()->with('songs')->find($id);
+        $playlist = $request->auth->playlists()->with('songs.artist')->find($id);
 
         // No playlist found
         if (empty($playlist)) {
