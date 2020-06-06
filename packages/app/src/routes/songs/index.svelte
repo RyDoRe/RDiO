@@ -157,17 +157,7 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.
           <th></th>
         </tr>
         {#each filteredSongs as song, songIndex (song.id)}
-          <!-- <div
-            class="listitemwrapper"
 
-          > -->
-            <!-- <ListItem>
-              <ListItemText>{song.title}</ListItemText>
-
-              <span style="color: white;">{song.artist.name}</span>
-              <IconButton icon={plus} on:click={e => openAddToPlaylistDialog(e, song.id, songIndex)} />
-              <IconButton icon={times} on:click={e => openRemoveDialog(e, song.id, songIndex)} />
-            </ListItem> -->
             <tr>
               <td class="titeltH">{song.title}</td>
               <td style="text-align: center">{song.rating}/5</td>
@@ -178,7 +168,6 @@ song.artist.name.toLowerCase().includes(searchTerm.toLowerCase()) || song.genre.
                 <IconButton icon={times} on:click={e => openRemoveDialog(e, song.id, songIndex)} />
               </td>
             </tr>
-          <!-- </div> -->
         {/each}
      </table>  
   {/if}
