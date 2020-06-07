@@ -117,9 +117,7 @@
         -->
     </div>
 
-  <ul>
-		<li><a href='.'><img class="placeholder" src="radioPlaceholder.png" alt="Radio Icon"></a></li>
-	</ul>
+<img class="placeholder" src="radioPlaceholder.png" alt="Radio Icon">
 
     <div class="playingBarControl">
       {#if togglePlay}

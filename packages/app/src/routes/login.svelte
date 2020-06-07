@@ -58,6 +58,15 @@
   .error {
     color: red;
   }
+
+  .registerButton {
+    font-weight: 200;
+    color: rgb(216, 213, 29);
+  }
+
+  .question {
+    margin-top: 1em;
+  }
 </style>
 
 <svelte:head>
@@ -79,4 +88,5 @@
   {/if}
 </form>
 
-<a href="/register">Register</a>
+<p class="question" >Not a member?</p>
+<a class="registerButton" href="/register">Register</a>
