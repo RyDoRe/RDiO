@@ -8,6 +8,11 @@
 
 <style>
 	nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: 100%;
 		border-bottom: 1px solid rgb(255,100,3);
 		font-weight: 200;
 		padding: 0 1em;
@@ -15,6 +20,8 @@
 		justify-content: space-between;
 		align-items: center;
 		box-shadow: 0px 11px 11px -2px rgba(0,0,0,0.38);
+    background-color: rgb(54, 54, 54);
+    z-index: 2;
 	}
 
 	ul {

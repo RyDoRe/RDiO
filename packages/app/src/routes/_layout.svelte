@@ -11,7 +11,7 @@ import Toast from '../components/Toast.svelte'
 		position: relative;
 		max-width: 56em;
 		padding: 2em;
-		margin: 0 auto;
+		margin: 130px auto 100px;
 		box-sizing: border-box;
 	}
 </style>

@@ -29,7 +29,7 @@
     border-radius: 5px;
     padding: 0.5em 1em;
     background: transparent;
-    border: 2px solid rgb(255, 255, 255);
+    border: 2px solid rgb(214, 214, 214);
     margin-bottom: 15px;
   }
 </style>
