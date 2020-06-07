@@ -99,13 +99,17 @@
     const currentPosition = parseInt(event.dataTransfer.getData('text/plain'))
     const newSonglist = playlist.songs
 
-    if (currentPosition < newPosition) {
-      newSonglist.splice(newPosition + 1, 0, newSonglist[currentPosition])
-      newSonglist.splice(currentPosition, 1)
-    } else {
-      newSonglist.splice(newPosition, 0, newSonglist[currentPosition])
-      newSonglist.splice(currentPosition + 1, 1)
-    }
+    // if (currentPosition < newPosition) {
+    //   newSonglist.splice(newPosition + 1, 0, newSonglist[currentPosition])
+    //   newSonglist.splice(currentPosition, 1)
+    // } else {
+    //   newSonglist.splice(newPosition, 0, newSonglist[currentPosition])
+    //   newSonglist.splice(currentPosition + 1, 1)
+    // }
+  
+    var b = newSonglist[currentPosition]
+    newSonglist[currentPosition] = newSonglist[newPosition]
+    newSonglist[newPosition] = b
 
     const response = await put(`playlists/${id}/songs`, {
       currentPosition: currentPosition + 1,
