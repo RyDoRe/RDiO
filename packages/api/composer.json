@@ -58,6 +58,9 @@
         ],
         "lint:fix": [
             "vendor/bin/phpcbf --standard=phpcs.xml"
+        ],
+        "apidoc": [
+            "npx apidoc -i routes/ -o apidoc/"
         ]
     }
 }

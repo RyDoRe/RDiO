@@ -41,7 +41,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         // TODO: use a user roles table
         // User roles descending more rights
         // example: admin has the same rights as user and broadcaster,
-        // but user does not have the same rights as admin an broadcaster
+        // but user does not have the same rights as admin and broadcaster
         $roles = [
             'user',
             'broadcaster',

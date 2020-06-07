@@ -165,9 +165,6 @@ class PlaylistController extends Controller
             $song1->pivot->song_order = $newPosition;
             $song2->pivot->song_order = $currentPosition;
 
-            echo $song1;
-            echo $song2;
-
             //switch song positions
             try {
                 DB::beginTransaction();
