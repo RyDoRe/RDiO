@@ -34,6 +34,7 @@
     }
   })
 
+  // function call for updatting the user information
   async function updateUser (event) {
     const response = await put(`users/${id}`, {
       name: event.target.name.value,
@@ -46,6 +47,7 @@
 
     const json = await response.json()
 
+    // check if function call was successful
     if (response.status === 200) {
       error = null
     } else {
@@ -61,19 +63,35 @@
 </script>
 
 <style>
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 350px;
+  }
+
+  label {
+    color: #fff;
+  }
+
   .error {
     color: red;
   }
 </style>
 
+<!--
+  form for updatting the given user information
+-->
 {#if user}
   <form on:submit|preventDefault={updateUser}>
     <label for="name">Username: </label>
     <Input id="name" placeholder="Name" value={user.name} name="name" />
     <label for="email">Email: </label>
     <Input id="email" placeholder="Email" value={user.email} name="email" />
+    <label for="current_password">Old Password: </label>
     <Input id="current_password" type="password" placeholder="Old Password" name="current_password" />
+    <label for="password">Password: </label>
     <Input id="password" type="password" placeholder="Password" name="password" />
+    <label for="password_confirmation">Password Confirmation: </label>
     <Input id="password_confirmation" type="password" placeholder="Password Confirmation" name="password_confiramtion" />
     <label for="role">Role</label>
     <select id="role" name="role" value={user.role}>

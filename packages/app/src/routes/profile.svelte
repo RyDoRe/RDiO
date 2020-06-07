@@ -30,6 +30,7 @@
     }
   })
 
+  // function for updating the user information
   async function updateUser (event) {
     const response = await put('users/me', {
       name: event.target.name.value,
@@ -41,6 +42,7 @@
 
     const json = await response.json()
 
+    // check if the request was successful
     if (response.status === 200) {
       session.update(store => {
         store.username = json.name
@@ -60,19 +62,40 @@
 </script>
 
 <style>
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 350px;
+  }
+
+  label {
+    color: #fff;
+  }
+
   .error {
     color: red;
   }
 </style>
 
+<svelte:head>
+	<title>RDIO - User Profile</title>
+</svelte:head>
+
+
 {#if user}
+  <!-- 
+    form of the user information
+  -->
   <form on:submit|preventDefault={updateUser}>
     <label for="name">Username: </label>
     <Input id="name" placeholder="Name" value={user.name} name="name" />
     <label for="email">Email: </label>
     <Input id="email" placeholder="Email" value={user.email} name="email" />
+    <label for="current_password">Old Password: </label>
     <Input id="current_password" type="password" placeholder="Old Password" name="current_password" />
+    <label for="password">Password: </label>
     <Input id="password" type="password" placeholder="Password" name="password" />
+    <label for="password_confirmation">Password Confirmation: </label>
     <Input id="password_confirmation" type="password" placeholder="Password Confirmation" name="password_confiramtion" />
     <Button type="submit">Save</Button>
     {#if error}

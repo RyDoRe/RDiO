@@ -103,10 +103,10 @@ class UserController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            // Search in the playlist of the authenticated user
+            // Search for the user
             $user = User::find($id);
 
-            // No playlist found
+            // No user found
             if (empty($user)) {
                 return response()->json(['message' => 'Could not find user.'], 404);
             }
@@ -190,7 +190,15 @@ class UserController extends Controller
 
                 return response()
                     ->json($user)
-                    ->withCookie(new Cookie('jwt', $token, (time() + 60 * 60), '/', 'localhost', false, true));
+                    ->withCookie(new Cookie(
+                        'jwt',
+                        $token,
+                        (time() + 60 * 60),
+                        '/',
+                        env('COOKIE_DOMAIN', 'localhost'),
+                        false,
+                        true
+                    ));
             }
 
             return response()->json($user);

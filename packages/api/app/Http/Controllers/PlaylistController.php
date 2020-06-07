@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Playlist;
+use App\Song;
 use Validator;
 use Illuminate\Http\Request;
 use App\Exceptions\Handler;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\PlaylistSongTrait;
+use Illuminate\Support\Facades\DB;
 
 class PlaylistController extends Controller
 {
@@ -60,8 +62,8 @@ class PlaylistController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // Search in the playlist of the authenticated user
-        $playlist = $request->auth->playlists()->with('songs')->find($id);
+        // Show the specified playlist of the authenticated user
+        $playlist = $request->auth->playlists()->with('songs.artist')->find($id);
 
         // No playlist found
         if (empty($playlist)) {
@@ -83,7 +85,7 @@ class PlaylistController extends Controller
             'name' => 'required',
         ]);
 
-        // Search in the playlist of the authenticated user
+        // Search the specified playlist of the authenticated user
         $playlist = $request->auth->playlists->find($id);
 
         // No playlist found
@@ -107,7 +109,7 @@ class PlaylistController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            // Search in the playlist of the authenticated user
+            // Search the specified playlist of the authenticated user
             $playlist = $request->auth->playlists->find($id);
 
             // No playlist found
@@ -140,7 +142,7 @@ class PlaylistController extends Controller
             $currentPosition = $request->input('currentPosition');
             $newPosition = $request->input('newPosition');
 
-            // Search in the playlist of the authenticated user
+            // Search the specified playlist of the authenticated user
             $playlist = $request->auth->playlists->find($id);
 
             // No playlist found
@@ -148,16 +150,39 @@ class PlaylistController extends Controller
                 return response()->json(['message' => 'Could not find playlist.'], 404);
             }
 
+
             $song1 = $playlist->songs()->wherePivot('song_order', $currentPosition)->first();
             $song2 = $playlist->songs()->wherePivot('song_order', $newPosition)->first();
+
+            echo $song1;
+            echo $song2;
 
             // No song found
             if (empty($song1) || empty($song2)) {
                 return response()->json(['message' => 'Could not find song.'], 404);
             }
 
-            $playlist->songs()->updateExistingPivot($song1->id, ['song_order' => $newPosition]);
-            $playlist->songs()->updateExistingPivot($song2->id, ['song_order' => $currentPosition]);
+            $song1->pivot->song_order = $newPosition;
+            $song2->pivot->song_order = $currentPosition;
+
+            echo $song1;
+            echo $song2;
+
+            //switch song positions
+            try {
+                DB::beginTransaction();
+                DB::table('playlist_song')
+                ->where('song_order', $currentPosition)->where('playlist_id', $playlist->id)->where('id', $song1->pivot->id)
+                ->update(['song_order' => $newPosition]);
+  
+                DB::table('playlist_song')
+                ->where('song_order', $newPosition)->where('playlist_id', $playlist->id)->where('id', $song2->pivot->id)
+                ->update(['song_order' => $currentPosition]);
+                DB::commit();
+            } catch (\PDOException $e) {
+                // Woopsy
+                DB::rollBack();
+            }
 
             return response()->json(['message' => 'Updated song in playlist.'], 200);
         } catch (\Exception $e) {
@@ -192,7 +217,7 @@ class PlaylistController extends Controller
      */
     public function addSongToPlaylist(Request $request, $playlistId, $songId)
     {
-        // Search in the playlist of the authenticated user
+        // Search the specified playlist of the authenticated user
         $playlist = $request->auth->playlists()->withCount('songs')->find($playlistId);
 
         // No playlist found
@@ -200,6 +225,7 @@ class PlaylistController extends Controller
             return response()->json(['message' => 'Could not find playlist.'], 404);
         }
 
+        //attach song to the playlist
         $playlist->songs()->attach($songId, ['song_order' => $playlist->songs_count + 1]);
 
         return response()->json('Song was successfully added to playlist.');

@@ -10,14 +10,13 @@
 
 <script>
   import IconButton from '../../components/IconButton.svelte'
-  import FloatingButton from '../../components/FloatingButton.svelte'
+  import Button from '../../components/Button.svelte'
   import Input from '../../components/Input.svelte'
   import ListItem from '../../components/ListItem.svelte'
   import ListItemText from '../../components/ListItemText.svelte'
   import Dialog from '../../components/Dialog.svelte'
-  import Icon from 'svelte-awesome/components/Icon.svelte'
 
-  import { edit, trash, plus } from 'svelte-awesome/icons'
+  import { edit, trash } from 'svelte-awesome/icons'
 
   import { get, post, put, del } from 'api'
   import { goto } from '@sapper/app'
@@ -149,7 +148,7 @@
   :global(.addbutton) {
     position: fixed;
     right: 2rem;
-    bottom: 2rem;
+    bottom: 4rem;
   }
 
   .error {
@@ -159,13 +158,17 @@
 
 <h1>Playlists</h1>
 
+<Button class="addbutton" on:click={() => { showAddDialog = true }}>
+  Create Playlist
+</Button>
+
 {#if filteredPlaylists}
   <Input placeholder="Search..." bind:value={searchTerm} />
   {#each filteredPlaylists as playlist, playlistIndex (playlist.id)}
     <div animate:flip>
       <ListItem on:click={() => goto(`playlists/${playlist.id}`)}>
         <ListItemText>{playlist.name}</ListItemText>
-        <span>{playlist.songs_count} Song(s)</span>
+        <span style="color: white;">{playlist.songs_count} Song(s)</span>
         <IconButton icon={edit} on:click={e => openEditDialog(e, playlist.id, playlist.name, playlistIndex) }/>
         <IconButton icon={trash} on:click={e => openDeleteDialog(e, playlist.id, playlistIndex)} />
       </ListItem>
@@ -183,8 +186,7 @@
 {/if}
 
 {#if showEditDialog}
-  <Dialog onClose={handleClose} onConfirm={editPlaylist}>
-    <p>Edit Playlist</p>
+  <Dialog onClose={handleClose} onConfirm={editPlaylist} title="Edit Playlistname">
     <Input placeholder="Name" bind:value={name} bind:ref={inputRef} on:enter={editPlaylist} />
     {#if error}
       <p class="error">Error: {error}</p>
@@ -201,6 +203,4 @@
   </Dialog>
 {/if}
 
-<FloatingButton class="addbutton" on:click={() => { showAddDialog = true }}>
-  <Icon data={plus} />
-</FloatingButton>
+

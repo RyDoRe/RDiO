@@ -188,6 +188,16 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
 
 
     $router->delete('songs/{id}', 'SongController@deleteSong');
+
+    // radio
+    $router->get('radios', 'RadioController@index');
+    $router->get('radios/my', 'RadioController@indexUserRadios');
+    $router->get('radios/{id}/stream', 'RadioController@stream');
+    $router->post('radios', 'RadioController@store');
+    $router->put('radios/{id}/activate', 'RadioController@activate');
+    $router->delete('radios/{id}', 'RadioController@destroy');
+    $router->get('radios/favorites', 'RadioController@getFavorites');
+    $router->post('radios/favorites', 'RadioController@toggleFavorite');
 });
 
 $router->group(['middleware' => 'jwt:admin'], function () use ($router) {

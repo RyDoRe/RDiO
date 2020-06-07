@@ -6,6 +6,7 @@
 <style>
   .listitemtext {
     flex: 1 1 auto;
+    color: #fff;
   }
 </style>
 

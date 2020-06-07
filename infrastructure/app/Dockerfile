@@ -1,13 +1,20 @@
-FROM node:13-alpine as build-stage
+FROM node:13-alpine
 
 WORKDIR /app
 
-COPY packages/app /app
+COPY ./package.json ./
+COPY ./yarn.lock ./
 
 RUN yarn install
+
+COPY . .
+
+ENV NODE_ENV production
 
 RUN yarn build
 
 EXPOSE 3000
 
-CMD ["node", "__sapper__/build"]
+ADD ./.docker/entrypoint.sh ./
+
+CMD ["sh", "entrypoint.sh"]

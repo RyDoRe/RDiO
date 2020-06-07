@@ -12,20 +12,18 @@
   import Input from '../components/Input.svelte'
   import Button from '../components/Button.svelte'
 
+  import { baseURL } from 'api'
+
   let error
   let message = ''
+  let rating = 0
 
+  // function for uploading the song form
   async function uploadSong (event) {
     message = ''
     error = ''
-    const {
-      title,
-      thumbnail,
-      genre,
-      rating,
-      path,
-      artist
-    } = event.target
+
+    const { title, thumbnail, genre, rating, path, artist } = event.target
 
     var data = new FormData()
     data.append('title', title.value)
@@ -35,16 +33,14 @@
     data.append('rating', rating.value)
     data.append('artist', artist.value)
 
-    const response = await fetch('http://localhost:8080/songUpload', {
+    const response = await fetch(`${baseURL}/songUpload`, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
-      headers: {
-        Accept: 'application/json'
-      },
       body: data
     })
 
+    // Check if songupload was successful
     if (response.status === 200) {
       message = 'Song was uploaded!'
     } else {
@@ -57,24 +53,72 @@
             return json[key].join('')
           })
           .join(' ')
-        console.log(error)
       }
     }
   }
 </script>
 
+<style>
+  form {
+    display: flex;
+    flex-direction: column;
+    max-width: 350px;
+  }
+
+  .message {
+    color: white;
+  }
+</style>
+
+<svelte:head>
+	<title>RDIO - Song Upload</title>
+</svelte:head>
+
 <h1>Song Upload!</h1>
 
+<!--
+  Form for uploading the song
+-->
 <form on:submit|preventDefault={uploadSong}>
-  <Input type="text" name="title" placeholder="title" />
-  <Input type="file" name="thumbnail" placeholder="Thumbnail-Path" />
-  <Input type="text" name="genre" placeholder="genre" />
-  <Input type="text" name="rating" placeholder="rating" />
-  <Input type="file" name="path" placeholder="songPath" />
-  <Input type="text" name="artist" placeholder="artist" />
+  <label for="title">Songtitle:</label>
+  <Input type="text" id="title" name="title" placeholder="title" />
+  <label for="thumbnail">Thumbnailfile:</label>
+  <Input
+    type="file"
+    id="thumbnail"
+    name="thumbnail"
+    placeholder="Thumbnail-Path" />
+  <label for="genre">Genre:</label>
+  <Input type="text" id="genre" name="genre" placeholder="genre" />
+  <label for="rating">Rating: {rating}</label>
+  <input
+    type="range"
+    id="rating"
+    min="0"
+    max="5"
+    step="1"
+    name="rating"
+    bind:value={rating} />
+  <label for="path">Songfile:</label>
+  <Input type="file" id="path" name="path" placeholder="songPath" />
+  <label for="artist">Artist:</label>
+  <Input type="text" id="artist" name="artist" placeholder="artist" />
   <Button type="submit">Upload</Button>
-  <p>{message}</p>
+  <p class="message">{message}</p>
   {#if error}
     <p class="error">Error: {error}</p>
   {/if}
 </form>
+
+
+<!--
+  Option Range for the Rating Slider
+-->
+<datalist id="ratingRange">
+  <option value="0" label="0" />
+  <option value="1" label="1" />
+  <option value="2" label="2" />
+  <option value="3" label="3" />
+  <option value="4" label="4" />
+  <option value="5" label="5" />
+</datalist>

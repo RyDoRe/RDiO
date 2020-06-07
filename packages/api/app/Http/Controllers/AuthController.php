@@ -68,7 +68,15 @@ class AuthController extends BaseController
             return response()
                 ->json($user, 200)
                 // Set a http cookie with the token as value
-                ->withCookie(new Cookie('jwt', $token, (time() + 60 * 60), '/', 'localhost', false, true));
+                ->withCookie(new Cookie(
+                    'jwt',
+                    $token,
+                    (time() + 60 * 60),
+                    '/',
+                    env('COOKIE_DOMAIN', 'localhost'),
+                    false,
+                    true
+                ));
         }
 
         // Bad Request response
@@ -98,7 +106,14 @@ class AuthController extends BaseController
                 'regex:/[0-9]/',        // Must contain at least one digit
                 'regex:/[@$!%*#?&]/',   // Must contain a special character
             ]
-        ]);
+            ], [
+                'password.required' => 'You have to put in a password',
+                'password.min' => 'The password has to have at least 8 characters',
+                // @phpstan-ignore-next-line
+                'password.regex' => 'Password must contain at least one number, both uppercase and lowercase letters and a special character.'
+            ]);
+
+        
 
         try {
             $user = new User;
@@ -128,6 +143,6 @@ class AuthController extends BaseController
         setcookie('jwt', '', -1, '/', 'localhost', false, true);
         return response()
             ->json(['message' => 'User has logged out.'])
-            ->withCookie(new Cookie('jwt', '', -1, '/', 'localhost', false, true));
+            ->withCookie(new Cookie('jwt', '', -1, '/', env('COOKIE_DOMAIN', 'localhost'), false, true));
     }
 }

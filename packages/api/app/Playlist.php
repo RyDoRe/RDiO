@@ -31,6 +31,6 @@ class Playlist extends Model
      */
     public function songs()
     {
-        return $this->belongsToMany('App\Song')->withPivot('song_order')->orderBy('song_order');
+        return $this->belongsToMany('App\Song')->withTimestamps()->withPivot('id', 'song_order')->orderBy('song_order');
     }
 }
