@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Radio;
 use Validator;
 use Illuminate\Http\Request;
@@ -99,7 +100,8 @@ class RadioController extends Controller
         // Stream settings
         $settings = [
           'buffer_size' => 16384,
-          'max_listen_time' => 14400,
+          "max_listen_time" => 14400,
+          "bitrate" => 96,
         ];
 
         $playfiles = [];
@@ -160,10 +162,14 @@ class RadioController extends Controller
         );
 
         // Return buffer in Streamed Response
-        return response()->stream(function () use ($start_time, $settings, $i, $playfiles, $old_buffer) {
-            while (time() - $start_time < $settings['max_listen_time']) {
+        return response()->stream(function () use ($settings, $i, $playfiles, $old_buffer) {
+            while (true) {
               // Load next song
                 $i = ++$i % count($playfiles);
+
+              // Log file that's loaded
+                Log::info('loaded: ' . $playfiles[$i]['filepath']);
+
               // @phpstan-ignore-next-line
                 $buffer = $old_buffer.substr(
                     file_get_contents($playfiles[$i]['filepath']),
@@ -185,7 +191,11 @@ class RadioController extends Controller
               // Load next part of the buffer
                 $old_buffer = substr($buffer, $j * $settings['buffer_size']);
             }
-        }, 200, ['Cache-Control' => 'no-cache', 'Content-Type' => 'audio/mpeg']);
+        }, 200, [
+          'Cache-Control' => 'no-cache',
+          'Content-Type' => 'audio/mpeg',
+          'Content-Length' => $settings['max_listen_time'] * $settings['bitrate'] * 128
+        ]);
     }
 
     /**
