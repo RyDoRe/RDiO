@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'auth'], function () use ($router) {
 
-    /** 
+    /**
      * @api {post} /auth/login Login the user
      * @apiName login
      * @apiGroup Auth
@@ -40,7 +40,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
      */
     $router->post('login', 'AuthController@authenticate');
 
-    /** 
+    /**
      * @api {post} /auth/register Register a user
      * @apiName register
      * @apiGroup Auth
@@ -49,7 +49,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
      *       "email": "UserEmail@mail.com"
      *       "name": "Username"
      *       "password": "12345678aB!"
-     *       "password_confirmation": "12345678aB!" 
+     *       "password_confirmation": "12345678aB!"
      *     }
      *
      * @apiSuccessExample {json} Success-Response:
@@ -65,7 +65,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
      */
     $router->post('register', 'AuthController@register');
 
-        /** 
+        /**
      * @api {delete} /auth/logout Logout the user
      * @apiName logout
      * @apiGroup Auth
@@ -76,7 +76,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
 });
 
 $router->group(['middleware' => 'jwt'], function () use ($router) {
-    
+
     /**
      * @api {get} /user/me Request User information
      * @apiName GetUser
@@ -95,7 +95,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      */
     $router->get('users/me', 'UserController@showSelf');
 
-    /** 
+    /**
      * @api {put} /user/me Update User information
      * @apiName UpdateUser
      * @apiGroup User
@@ -120,7 +120,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      *     }
      */
     $router->put('users/me', 'UserController@updateSelf');
-    
+
     /**
      * @api {get} /playlists Display a listing of playlists.
      * @apiName GetPlaylists
@@ -143,10 +143,10 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      *       "created_at": "2020-05-24T11:07:26.000000Z",
      *       "updated_at": "2020-05-24T11:07:26.000000Z",
      *       "songs_count": 34
-     *   }  
+     *   }
      */
     $router->get('playlists', 'PlaylistController@index');
-    
+
     /**
      * @api {post} /playlists Create new Playlist
      * @apiName CreatePlaylist
@@ -203,7 +203,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      * @api {put} /playlists/{id} Update Playlistname
      * @apiName UpdatePlaylistname
      * @apiGroup Playlist
-     * 
+     *
      * @apiParamExample {json} Request:
      *     {
      *       "name": "Playlistname",
@@ -219,7 +219,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      *      }
      */
     $router->put('playlists/{id}', 'PlaylistController@update');
-    
+
     /**
      * @api {delete} /playlists/{id} Delete Playlist
      * @apiName DeletePlaylist
@@ -230,23 +230,23 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      *     {"message":"Deleted playlist."}
      */
     $router->delete('playlists/{id}', 'PlaylistController@destroy');
-    
+
     /**
      * @api {put} /playlists/{id}/songs Update Songorder in Playlist
      * @apiName UpdateSong
      * @apiGroup Playlist
-     * 
+     *
      * @apiParamExample {json} Request:
      *     {
      *       "currentPosition": "1",
      *       "newPosition": "2",
      *     }
      *
-     * @apiSuccessExample {String} Updated song in playlist.
+     * @apiSuccess {String} message Updated song in playlist.
      */
     $router->put('playlists/{id}/songs', 'PlaylistController@updateSong');
-    
- 
+
+
     /**
      * @api {delete} /playlists/{playlistId}/songs{songId} Delete Song from Playlist
      * @apiName RemoveSong
@@ -283,7 +283,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      *      "rating": "4",
      *      "artist": "Artistname"
      *   }
-     * 
+     *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {"message":"Uploaded song."}
@@ -354,7 +354,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      * @api {get} /radios Get Radios from other users
      * @apiName GetAllRadios
      * @apiGroup Radio
-     * 
+     *
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -379,7 +379,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      */
     $router->get('radios', 'RadioController@index');
 
-    /** 
+    /**
      * @api {get} /radios/my Get radios of auth user
      * @apiName GetUserRadios
      * @apiGroup Radio
@@ -407,7 +407,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      */
     $router->get('radios/my', 'RadioController@indexUserRadios');
 
-    /** 
+    /**
      * @api {get} /radios/{id} Get the radio stream
      * @apiName RadioStream
      * @apiGroup Radio
@@ -415,12 +415,12 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      * @apiSuccess {audio/mpeg}.
      */
     $router->get('radios/{id}/stream', 'RadioController@stream');
-    
+
     /**
      * @api {post} /radios Create radio
      * @apiName CreateRadio
      * @apiGroup Radio
-     * 
+     *
      * @apiParamExample {json} Request:
      *     {
      *       "name": "radio name",
@@ -464,7 +464,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      *     }
      */
     $router->put('radios/{id}/activate', 'RadioController@activate');
-    /** 
+    /**
      * @api {delete} /radios/{id} Delete the radio
      * @apiName DeleteRadio
      * @apiGroup Radio
@@ -502,7 +502,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
      * @api {post} /radios/favorties Toggle radio favorite
      * @apiName ToggleFavorite
      * @apiGroup Radio
-     * 
+     *
      * @apiParamExample {json} Request:
      *     {
      *       "radio_id": 1,
@@ -514,7 +514,7 @@ $router->group(['middleware' => 'jwt'], function () use ($router) {
 });
 
 $router->group(['middleware' => 'jwt:admin'], function () use ($router) {
-    
+
     /**
      * @api {get} /users Show users
      * @apiName ShowUsers
@@ -558,7 +558,7 @@ $router->group(['middleware' => 'jwt:admin'], function () use ($router) {
      * @apiName UpdateUser
      * @apiGroup User
      * @apiPermission admin
-     * 
+     *
      * @apiParamExample {json} Request:
      *     {
      *       "name": "user name",
@@ -581,7 +581,7 @@ $router->group(['middleware' => 'jwt:admin'], function () use ($router) {
      */
     $router->put('users/{id}', 'UserController@update');
 
-    /** 
+    /**
      * @api {delete} /user/{id} Delete the user
      * @apiName DeleteUser
      * @apiGroup User
