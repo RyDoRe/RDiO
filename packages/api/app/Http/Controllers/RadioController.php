@@ -83,7 +83,7 @@ class RadioController extends Controller
      * Stream a radio.
      *
      * @param int $id
-     * @return void
+     * @return mixed
      */
     public function stream($id)
     {
@@ -106,20 +106,20 @@ class RadioController extends Controller
 
         // Load song metadata
         foreach ($songs as $song) {
-          if (file_exists($song->path)) {
-            $filesize = filesize($song->path);
+            if (file_exists($song->path)) {
+                $filesize = filesize($song->path);
 
-            $playfile = [
-              'filepath' => $song->path,
-              'filesize' => $filesize,
-              'playtime' => ($filesize * 8) / (128 * 1024),
-              'audiostart' => 45,
-              'audioend' => $filesize,
-              'audiolength' => $filesize - 45,
-            ];
+                $playfile = [
+                'filepath' => $song->path,
+                'filesize' => $filesize,
+                'playtime' => ($filesize * 8) / (128 * 1024),
+                'audiostart' => 45,
+                'audioend' => $filesize,
+                'audiolength' => $filesize - 45,
+                ];
 
-            $playfiles[] = $playfile;
-          }
+                $playfiles[] = $playfile;
+            }
         }
 
         $start_time = microtime(true);
@@ -127,7 +127,7 @@ class RadioController extends Controller
         // Calc total playtime
         $total_playtime = 0;
         foreach ($playfiles as $playfile) {
-          $total_playtime += $playfile['playtime'];
+            $total_playtime += $playfile['playtime'];
         }
 
         // Calc playtime based on play position
@@ -135,14 +135,14 @@ class RadioController extends Controller
         $play_pos = $start_time % $total_playtime;
         $i = -1;
         foreach ($playfiles as $i => $playfile) {
-          $play_sum += $playfile['playtime'];
-          if ($play_sum > $play_pos) {
-            break;
-          }
+            $play_sum += $playfile['playtime'];
+            if ($play_sum > $play_pos) {
+                break;
+            }
         }
 
         if ($i === -1) {
-          return;
+            return;
         }
 
         // Calc track position
@@ -152,39 +152,39 @@ class RadioController extends Controller
         // Load buffer based on track position
         // @phpstan-ignore-next-line
         $old_buffer = substr(
-          file_get_contents(
-            $playfiles[$i]['filepath']
-          ),
-          $playfiles[$i]['audiostart'] + $track_pos,
-          $playfiles[$i]['audiolength'] - $track_pos
+            file_get_contents(
+                $playfiles[$i]['filepath']
+            ),
+            $playfiles[$i]['audiostart'] + $track_pos,
+            $playfiles[$i]['audiolength'] - $track_pos
         );
 
         // Return buffer in Streamed Response
         return response()->stream(function () use ($start_time, $settings, $i, $playfiles, $old_buffer) {
-          while (time() - $start_time < $settings['max_listen_time']) {
-            // Load next song
-            $i = ++$i % count($playfiles);
-            // @phpstan-ignore-next-line
-            $buffer = $old_buffer.substr(
-              file_get_contents($playfiles[$i]['filepath']),
-              $playfiles[$i]['audiostart'],
-              $playfiles[$i]['audiolength']
-            );
+            while (time() - $start_time < $settings['max_listen_time']) {
+              // Load next song
+                $i = ++$i % count($playfiles);
+              // @phpstan-ignore-next-line
+                $buffer = $old_buffer.substr(
+                    file_get_contents($playfiles[$i]['filepath']),
+                    $playfiles[$i]['audiostart'],
+                    $playfiles[$i]['audiolength']
+                );
 
-            // Split the buffer into small parts
-            for ($j = 0; $j < floor(strlen($buffer) / $settings['buffer_size']); $j++) {
-              echo substr($buffer, $j * $settings['buffer_size'], $settings['buffer_size']);
-              ob_flush();
-              flush();
+              // Split the buffer into small parts
+                for ($j = 0; $j < floor(strlen($buffer) / $settings['buffer_size']); $j++) {
+                    echo substr($buffer, $j * $settings['buffer_size'], $settings['buffer_size']);
+                    ob_flush();
+                    flush();
+                }
+              // Throttle the connection to minimize
+              // the bandwidth. The value depends
+              // more or less on the server resources.
+                sleep(2);
+
+              // Load next part of the buffer
+                $old_buffer = substr($buffer, $j * $settings['buffer_size']);
             }
-            // Throttle the connection to minimize
-            // the bandwidth. The value depends
-            // more or less on the server resources.
-            sleep(2);
-
-            // Load next part of the buffer
-            $old_buffer = substr($buffer, $j * $settings['buffer_size']);
-          }
         }, 200, ['Cache-Control' => 'no-cache', 'Content-Type' => 'audio/mpeg']);
     }
 
