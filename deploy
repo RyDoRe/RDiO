@@ -7,3 +7,7 @@ docker push registry.gitlab.com/chromion/rdio/api
 # build app
 docker build -f infrastructure/app/Dockerfile -t registry.gitlab.com/chromion/rdio/app packages/app
 docker push registry.gitlab.com/chromion/rdio/app
+
+# build apidoc
+docker build -f infrastructure/apidoc/Dockerfile -t registry.gitlab.com/chromion/rdio/apidoc packages/api
+docker push registry.gitlab.com/chromion/rdio/apidoc
