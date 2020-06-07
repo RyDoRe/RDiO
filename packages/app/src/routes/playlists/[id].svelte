@@ -106,12 +106,10 @@
     //   newSonglist.splice(newPosition, 0, newSonglist[currentPosition])
     //   newSonglist.splice(currentPosition + 1, 1)
     // }
-    
-    var b = newSonglist[currentPosition];
-    newSonglist[currentPosition] = newSonglist[newPosition];
-    newSonglist[newPosition] = b;
-
-    
+  
+    var b = newSonglist[currentPosition]
+    newSonglist[currentPosition] = newSonglist[newPosition]
+    newSonglist[newPosition] = b
 
     const response = await put(`playlists/${id}/songs`, {
       currentPosition: currentPosition + 1,
